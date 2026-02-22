@@ -5,4 +5,6 @@ module wolf.work.proj {
 
     opens wolf.work.proj to javafx.fxml;
     exports wolf.work.proj;
+    exports wolf.work.proj.lab;
+    opens wolf.work.proj.lab to javafx.fxml;
 }
