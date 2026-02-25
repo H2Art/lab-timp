@@ -1,5 +1,7 @@
 package wolf.work.proj.lab;
 import java.lang.Math;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class Habitat {
     // Константы
@@ -14,6 +16,20 @@ public class Habitat {
     void Update() {
         // генерация объектов
         // помещение в рандомное место окна
+    }
+
+    void SpawnObject() {
+        double rand = Math.random();
+        int[] coords = GetRandomCoordinates();
+        int x = coords[0];
+        int y = coords[1];
+        if (rand <= P1)
+        {
+            LegalRecord obj = new LegalRecord(x, y);
+        }
+        else {
+            IndividualRecord obj = new IndividualRecord(x, y);
+        }
     }
 
     // Функция, возвращающая рандомную пару координат окна симуляции
