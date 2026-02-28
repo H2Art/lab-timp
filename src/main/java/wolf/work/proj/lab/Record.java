@@ -10,5 +10,10 @@ public abstract class Record {
         this.y = y;
     }
 
+    public double getX() {
+        return x;
+    }
+
+
 
 }

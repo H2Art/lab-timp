@@ -1,18 +1,20 @@
 package wolf.work.proj.lab;
 import java.lang.Math;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
 public class Habitat {
     // Константы
     final double N1 = 3.0;
     final double N2 = 5.0;
     final double P1 = 0.7;
-    final double P2 = 0.3;
+    final double P2 = 1 - P1;
     final int WIDTH = 500;
     final int HEIGHT = 500;
+    // Спрайты
+
+    // Массив, содержащий ссылки на объекты
     Record[] Objects;
-    //
+
+    // Метод, работающий постоянно?
     void Update() {
         // генерация объектов
         // помещение в рандомное место окна
@@ -23,7 +25,7 @@ public class Habitat {
         int[] coords = GetRandomCoordinates();
         int x = coords[0];
         int y = coords[1];
-        if (rand <= P1)
+        if (rand <= P1) // определяем тип объекта, случайно
         {
             LegalRecord obj = new LegalRecord(x, y);
         }
