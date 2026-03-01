@@ -1,6 +1,8 @@
 module wolf.work.proj {
     requires javafx.controls;
     requires javafx.fxml;
+    requires javafx.graphics;
+//    requires wolf.work.proj;
 
 
     opens wolf.work.proj.front to javafx.fxml;
