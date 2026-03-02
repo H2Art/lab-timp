@@ -18,7 +18,4 @@ public class IndividualRecord extends Record {
     static public int getTypeCount() {
         return indCount;
     }
-    static public void decrementTypeCount() {
-        indCount--;
-    }
 }

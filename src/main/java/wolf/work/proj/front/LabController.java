@@ -3,21 +3,38 @@ import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import wolf.work.proj.lab.Habitat;
+import javafx.scene.layout.VBox;
+import wolf.work.proj.lab.*;
 import javafx.fxml.FXML;
-import wolf.work.proj.lab.IndividualRecord;
+
+import javafx.scene.control.Label;
 import wolf.work.proj.lab.Record;
-import wolf.work.proj.lab.Timer;
 
 public class LabController {
-
+    public static int currentTime;
+    @FXML
+    public VBox infoContainer;
+    @FXML
+    public Label infoTime;
+    @FXML
+    public Label infoRecords;
+    @FXML
+    public Label infoLegalRecords;
+    @FXML
+    public Label infoIndividualRecords;
     @FXML
     public Group objGroup;
+
 
     private Timer timer;
 
     @FXML
+    public Label timeDisplay;
+    private boolean timeDisplayState = true;
+
+    @FXML
     public void launch() {
+        infoContainer.setVisible(false);
         initializeTimer();
         System.out.println("sim launched");
     }
@@ -25,20 +42,24 @@ public class LabController {
     @FXML
     public void stop() {
         timer.stop();
-        Habitat.showInfo();
+        setInfo();
+        infoContainer.setVisible(true);
         Habitat.clearObjArray();
         objGroup.getChildren().clear();
+        changeCounter(0);
         System.out.println("sim stopped");
     }
 
     @FXML
     public void toggleTimeShow() {
+        timeDisplay.setVisible(!timeDisplayState);
+        timeDisplayState = !timeDisplayState;
         System.out.println("Time toggled");
     }
 
     @FXML
     public void debug() {
-        instantiateObj(new IndividualRecord());
+//        instantiateObj(new IndividualRecord());
     }
 
     public void initializeTimer() {
@@ -65,5 +86,20 @@ public class LabController {
         preview.setSmooth(false);
         return preview;
     }
-
+    public void changeCounter(int currTime) {
+        Platform.runLater(() -> {
+            if (timeDisplay != null) {
+                currentTime = currTime;
+                timeDisplay.setText(String.valueOf(currTime));
+            } else {
+                System.err.println("timeDisplay is null!");
+            }
+        });
+    }
+    public void setInfo() {
+        infoTime.setText("Времени прошло: " + currentTime);
+        infoRecords.setText("Записей создано: " + Record.getObjCount());
+        infoLegalRecords.setText("Юр. лиц создано: " + LegalRecord.getTypeCount());
+        infoIndividualRecords.setText("Физ. лиц создано: " + IndividualRecord.getTypeCount());
+    }
 }

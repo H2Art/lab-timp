@@ -1,5 +1,6 @@
 package wolf.work.proj.lab;
 import javafx.application.Platform;
+import wolf.work.proj.front.LabApplication;
 import wolf.work.proj.front.LabController;
 
 import java.lang.Math;
@@ -10,12 +11,12 @@ import java.util.concurrent.ScheduledExecutorService;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class Habitat {
-    private LabController controller;
+    private final LabController controller;
     Habitat(LabController controller) {
         this.controller = controller;
     }
-    // Константы
     static int currentTime = 0;
+    // Константы
     final int N1 = 3;
     final int N2 = 5;
     final double P1 = 0.7;
@@ -36,6 +37,7 @@ public class Habitat {
         if (counter % N2 == 0) {
             SpawnObject("Individual");
         }
+        controller.changeCounter(currentTime);
     }
     public static void clearObjArray() {
         int c = 0;

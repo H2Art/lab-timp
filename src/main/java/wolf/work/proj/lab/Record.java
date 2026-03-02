@@ -37,7 +37,6 @@ public abstract class Record {
         return this.sprite;
     }
     static public int getTypeCount() { return objCount; }
-    static public void decrementTypeCount() { objCount--; }
 
     public void setRandomCoordinates() {
         int WIDTH = Habitat.WIDTH;

@@ -19,6 +19,9 @@ public class Timer implements Runnable {
         while (running) {
             try {
                 Thread.sleep(1000);
+                if (!running) {
+                    break;
+                }
                 counter++;
                 hb.Update(counter);
             }

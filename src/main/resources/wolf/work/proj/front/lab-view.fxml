@@ -1,10 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <AnchorPane prefHeight="650.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="wolf.work.proj.front.LabController">
    <children>
       <Group fx:id="objGroup" />
+      <VBox fx:id="infoContainer" alignment="TOP_CENTER" layoutX="297.0" layoutY="138.0" prefHeight="400.0" prefWidth="210.0" style="-fx-border-color: blue; -fx-border-radius: 7; -fx-background-color: lightgray;">
+         <children>
+             <Label fx:id="infoTime" alignment="CENTER" contentDisplay="CENTER" prefHeight="100.0" prefWidth="210.0" text="Нажмите B" textAlignment="CENTER" textFill="BLUE">
+               <font>
+                  <Font size="20.0" />
+               </font></Label>
+             <Label fx:id="infoRecords" alignment="CENTER" contentDisplay="CENTER" prefHeight="100.0" prefWidth="210.0" text="Чтобы запустить sim" textAlignment="CENTER" textFill="BLUE">
+               <font>
+                  <Font size="20.0" />
+               </font></Label>
+             <Label fx:id="infoLegalRecords" alignment="CENTER" contentDisplay="CENTER" prefHeight="100.0" prefWidth="210.0" text="Нажмите E" textAlignment="CENTER" textFill="BLUE">
+               <font>
+                  <Font size="20.0" />
+               </font></Label>
+             <Label fx:id="infoIndividualRecords" alignment="CENTER" contentDisplay="CENTER" prefHeight="100.0" prefWidth="210.0" text="Чтобы завершить sim" textAlignment="CENTER" textFill="BLUE">
+               <font>
+                  <Font size="20.0" />
+               </font></Label>
+         </children></VBox>
+      <Label fx:id="timeDisplay" alignment="CENTER" prefHeight="84.0" prefWidth="98.0" style="-fx-background-color: lightgrey; -fx-border-style: solid; -fx-border-color: blue; -fx-border-radius: 5; -fx-background-radius: 5;" text="0" textAlignment="CENTER" textFill="#1a00ff">
+         <font>
+            <Font name="Century Gothic Bold" size="30.0" />
+         </font></Label>
    </children>
 </AnchorPane>

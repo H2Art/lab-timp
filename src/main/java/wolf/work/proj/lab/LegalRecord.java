@@ -18,7 +18,4 @@ public class LegalRecord extends Record {
     static public int getTypeCount() {
         return legCount;
     }
-    static public void decrementTypeCount() {
-        legCount--;
-    }
 }
