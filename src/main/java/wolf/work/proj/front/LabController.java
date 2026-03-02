@@ -1,4 +1,5 @@
 package wolf.work.proj.front;
+import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -6,20 +7,27 @@ import wolf.work.proj.lab.Habitat;
 import javafx.fxml.FXML;
 import wolf.work.proj.lab.IndividualRecord;
 import wolf.work.proj.lab.Record;
+import wolf.work.proj.lab.Timer;
 
 public class LabController {
 
     @FXML
     public Group objGroup;
 
-    Habitat hb = new Habitat();
+    private Timer timer;
+
     @FXML
     public void launch() {
+        initializeTimer();
         System.out.println("sim launched");
     }
 
     @FXML
     public void stop() {
+        timer.stop();
+        Habitat.showInfo();
+        Habitat.clearObjArray();
+        objGroup.getChildren().clear();
         System.out.println("sim stopped");
     }
 
@@ -33,16 +41,26 @@ public class LabController {
         instantiateObj(new IndividualRecord());
     }
 
+    public void initializeTimer() {
+        timer = new Timer(this);
+        Thread timerThread = new Thread(timer);
+        timerThread.setDaemon(true);
+        timerThread.start();
+    }
     public void instantiateObj(Record obj) {
-        ImageView preview = getImagePrefs(obj.getSprite());
-        preview.setX(obj.getX());
-        preview.setY(obj.getY());
-        objGroup.getChildren().add(preview);
+        if (Platform.isFxApplicationThread()) {
+            ImageView preview = getImagePrefs(obj.getSprite());
+            preview.setX(obj.getX());
+            preview.setY(obj.getY());
+            objGroup.getChildren().add(preview);
+        } else {
+            Platform.runLater(() -> instantiateObj(obj));
+        }
     }
 
     public ImageView getImagePrefs(Image sprite) {
         ImageView preview = new ImageView(sprite);
-        preview.setFitWidth(50);
+        preview.setFitWidth(100);
         preview.setPreserveRatio(true);
         preview.setSmooth(false);
         return preview;

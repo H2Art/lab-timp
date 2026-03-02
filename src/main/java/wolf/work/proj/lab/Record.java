@@ -5,15 +5,20 @@ import javafx.scene.image.Image;
 public abstract class Record {
     protected double x;
     protected double y;
+    static int objCount;
+    static int indCount;
+    static int legCount;
     String type;
     Image sprite;
     Record(int x, int y) {
+        objCount++;
         this.x = x;
         this.y = y;
     }
 
     Record() {
         setRandomCoordinates();
+        objCount++;
     }
 
     public double getX() {
@@ -24,9 +29,15 @@ public abstract class Record {
         return this.y;
     }
 
+    public static int getObjCount() {
+        return objCount;
+    }
+
     public Image getSprite() {
         return this.sprite;
     }
+    static public int getTypeCount() { return objCount; }
+    static public void decrementTypeCount() { objCount--; }
 
     public void setRandomCoordinates() {
         int WIDTH = Habitat.WIDTH;

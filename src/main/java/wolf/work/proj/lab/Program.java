@@ -5,7 +5,7 @@ import wolf.work.proj.front.LabApplication;
 public class Program {
     void main()
     {
-        Habitat hb = new Habitat();
+//        Habitat hb = new Habitat();
     }
 
 }

@@ -3,7 +3,7 @@
 <?import javafx.scene.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="500.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="wolf.work.proj.front.LabController">
+<AnchorPane prefHeight="650.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="wolf.work.proj.front.LabController">
    <children>
       <Group fx:id="objGroup" />
    </children>
