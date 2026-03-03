@@ -33,25 +33,22 @@ public class LabApplication extends Application {
         LabController controller = loader.getController();
         Scene scene = new Scene(root);
 
-        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                switch(event.getCode()) {
-                    case B:
-                        controller.launch();
-                        break;
-                    case E:
-                        controller.stop();
-                        break;
-                    case T:
-                        controller.toggleTimeShow();
-                        break;
-                    case D:
-                        controller.debug();
-                        break;
-                    default:
-                        break;
-                }
+        scene.setOnKeyPressed(event -> { 
+            switch(event.getCode()) {
+                case B:
+                    controller.launch();
+                    break;
+                case E:
+                    controller.stop();
+                    break;
+                case T:
+                    controller.toggleTimeShow();
+                    break;
+                case D:
+                    controller.debug();
+                    break;
+                default:
+                    break;
             }
         });
         stage.setTitle("Debtor spawner");

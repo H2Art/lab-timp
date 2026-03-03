@@ -28,7 +28,7 @@ public class Habitat {
     // Массив, содержащий ссылки на объекты
     public static Record[] objects = new Record[500];
 
-    // Метод, работающий постоянно?
+    // Метод, работающий постоянно
     void Update(int counter) {
         currentTime = counter;
         if (counter % N1 == 0) {
@@ -65,13 +65,6 @@ public class Habitat {
             controller.instantiateObj(record);
         } else {
             record = null;
-        }
-        if (record != null) {
-            Platform.runLater(() -> {
-                controller.instantiateObj(record);
-                objects[Record.getObjCount() - 1] = record;
-            });
-
         }
     }
     public static void showInfo() {

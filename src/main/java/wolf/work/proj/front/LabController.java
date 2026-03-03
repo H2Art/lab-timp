@@ -61,13 +61,14 @@ public class LabController {
     public void debug() {
 //        instantiateObj(new IndividualRecord());
     }
-
+    //создали запустили таймер
     public void initializeTimer() {
         timer = new Timer(this);
         Thread timerThread = new Thread(timer);
         timerThread.setDaemon(true);
         timerThread.start();
     }
+    //рисуем объект
     public void instantiateObj(Record obj) {
         if (Platform.isFxApplicationThread()) {
             ImageView preview = getImagePrefs(obj.getSprite());
@@ -86,11 +87,12 @@ public class LabController {
         preview.setSmooth(false);
         return preview;
     }
+    //Счетчик времени
     public void changeCounter(int currTime) {
         Platform.runLater(() -> {
             if (timeDisplay != null) {
                 currentTime = currTime;
-                timeDisplay.setText(String.valueOf(currTime));
+                timeDisplay.setText(String.valueOf(currentTime));
             } else {
                 System.err.println("timeDisplay is null!");
             }
