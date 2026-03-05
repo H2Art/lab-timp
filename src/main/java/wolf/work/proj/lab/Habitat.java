@@ -56,21 +56,15 @@ public class Habitat {
     void SpawnObject(String type) {
         double rand = Math.random();
         Record record;
-        if (type == "Legal" && rand <= P1) {
+        if (type.equals("Legal") && rand <= P1) {
             record = new LegalRecord();
             controller.instantiateObj(record);
         }
-        else if (type == "Individual" && rand <= P2) {
+        else if (type.equals("Individual") && rand <= P2) {
             record = new IndividualRecord();
             controller.instantiateObj(record);
         } else {
             record = null;
         }
-    }
-    public static void showInfo() {
-        System.out.println("Общее количество записей: " + Record.getObjCount());
-        System.out.println("ind: " + IndividualRecord.getTypeCount());
-        System.out.println("legal: " + LegalRecord.getTypeCount());
-        System.out.println("Time: " + currentTime);
     }
 }

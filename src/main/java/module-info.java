@@ -2,6 +2,7 @@ module wolf.work.proj {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.graphics;
+    requires java.desktop;
 //    requires wolf.work.proj;
 
 

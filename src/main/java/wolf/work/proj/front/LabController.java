@@ -25,7 +25,6 @@ public class LabController {
     @FXML
     public Group objGroup;
 
-
     private Timer timer;
 
     @FXML
@@ -71,21 +70,11 @@ public class LabController {
     //рисуем объект
     public void instantiateObj(Record obj) {
         if (Platform.isFxApplicationThread()) {
-            ImageView preview = getImagePrefs(obj.getSprite());
-            preview.setX(obj.getX());
-            preview.setY(obj.getY());
+            ImageView preview = obj.getSpriteView();
             objGroup.getChildren().add(preview);
         } else {
             Platform.runLater(() -> instantiateObj(obj));
         }
-    }
-
-    public ImageView getImagePrefs(Image sprite) {
-        ImageView preview = new ImageView(sprite);
-        preview.setFitWidth(100);
-        preview.setPreserveRatio(true);
-        preview.setSmooth(false);
-        return preview;
     }
     //Счетчик времени
     public void changeCounter(int currTime) {
@@ -98,6 +87,7 @@ public class LabController {
             }
         });
     }
+    // Вывод информации в окно
     public void setInfo() {
         infoTime.setText("Времени прошло: " + currentTime);
         infoRecords.setText("Записей создано: " + Record.getObjCount());

@@ -6,7 +6,7 @@ import javafx.application.Platform;
 
 public class Timer implements Runnable {
     private final Habitat hb;
-    private LabController controller;
+    LabController controller;
     private boolean running = true;
 
     public Timer(LabController controller) {

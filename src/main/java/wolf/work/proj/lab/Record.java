@@ -1,6 +1,9 @@
 package wolf.work.proj.lab;
+import javafx.scene.image.ImageView;
 import wolf.work.proj.lab.Habitat;
 import javafx.scene.image.Image;
+
+import javax.imageio.stream.ImageInputStream;
 
 public abstract class Record {
     protected double x;
@@ -9,17 +12,13 @@ public abstract class Record {
     static int indCount;
     static int legCount;
     String type;
-    Image sprite;
-    Record(int x, int y) {
-        objCount++;
-        this.x = x;
-        this.y = y;
-    }
 
     Record() {
         setRandomCoordinates();
         objCount++;
     }
+
+    public abstract ImageView getSpriteView();
 
     public double getX() {
         return this.x;
@@ -33,9 +32,6 @@ public abstract class Record {
         return objCount;
     }
 
-    public Image getSprite() {
-        return this.sprite;
-    }
     static public int getTypeCount() { return objCount; }
 
     public void setRandomCoordinates() {
