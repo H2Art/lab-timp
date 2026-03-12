@@ -17,6 +17,8 @@ public class LabApplication extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        stage.setWidth(Habitat.WIDTH);
+        stage.setHeight(Habitat.HEIGHT);
         FXMLLoader loader = new FXMLLoader(LabApplication.class.getResource("lab-view.fxml"));
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/sprites/FNS-icon.png")));
         Parent root = loader.load();

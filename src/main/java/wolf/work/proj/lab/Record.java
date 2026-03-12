@@ -35,14 +35,11 @@ public abstract class Record {
     static public int getTypeCount() { return objCount; }
 
     public void setRandomCoordinates() {
-        int WIDTH = Habitat.WIDTH;
-        int HEIGHT = Habitat.HEIGHT;
         double f1 = Math.random();
         double f2 = Math.random();
-        int x = (int)(f1 * WIDTH);
-        int y = (int)(f2 * HEIGHT);
+        int x = (int)(f1 * Habitat.WIDTH);
+        int y = (int)(f2 * Habitat.HEIGHT);
         this.x = x;
         this.y = y;
     }
-
 }

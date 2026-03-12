@@ -58,7 +58,7 @@ public class LabController {
 
     @FXML
     public void debug() {
-//        instantiateObj(new IndividualRecord());
+        System.out.println("aaaaaaaaaaaa");
     }
     //создали запустили таймер
     public void initializeTimer() {

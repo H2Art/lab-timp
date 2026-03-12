@@ -1,14 +1,7 @@
 package wolf.work.proj.lab;
-import javafx.application.Platform;
-import wolf.work.proj.front.LabApplication;
 import wolf.work.proj.front.LabController;
-
 import java.lang.Math;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-
-import static java.util.concurrent.TimeUnit.SECONDS;
+import java.util.ArrayList;
 
 public class Habitat {
     private final LabController controller;
@@ -19,14 +12,12 @@ public class Habitat {
     // Константы
     final int N1 = 3;
     final int N2 = 5;
-    final double P1 = 0.7;
-    final double P2 = 0.6;
-    final static int WIDTH = 800;
-    final static int HEIGHT = 650;
+    final double P1 = 0.9;
+    final double P2 = 0.9;
+    public final static int WIDTH = 1200;
+    public final static int HEIGHT = 800;
 
 
-    // Массив, содержащий ссылки на объекты
-    public static Record[] objects = new Record[500];
 
     // Метод, работающий постоянно
     void Update(int counter) {
@@ -40,18 +31,10 @@ public class Habitat {
         controller.changeCounter(currentTime);
     }
     public static void clearObjArray() {
-        int c = 0;
         Record.objCount = 0;
         IndividualRecord.indCount = 0;
         LegalRecord.legCount = 0;
-        for (Record record: objects) {
-            if (record == null) {
-                break;
-            }
-            objects[c] = null;
-            record = null;
-            c++;
-        }
+        ObjectsArraySingleton.getInstance().clear();
     }
     void SpawnObject(String type) {
         double rand = Math.random();
@@ -65,6 +48,9 @@ public class Habitat {
             controller.instantiateObj(record);
         } else {
             record = null;
+        }
+        if (record != null) {
+            ObjectsArraySingleton.getInstance().addRecord(record);
         }
     }
 }
