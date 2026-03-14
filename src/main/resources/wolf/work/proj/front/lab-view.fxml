@@ -1,35 +1,101 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="wolf.work.proj.front.LabController">
+<AnchorPane prefHeight="900.0" prefWidth="1800.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="wolf.work.proj.front.SimController">
    <children>
-      <Group fx:id="objGroup" />
-      <VBox fx:id="infoContainer" alignment="TOP_CENTER" layoutX="495.0" layoutY="200.0" prefHeight="400.0" prefWidth="210.0" style="-fx-border-color: blue; -fx-border-radius: 7; -fx-background-color: lightgray;">
+      <Pane fx:id="simObjects" disable="true" nodeOrientation="RIGHT_TO_LEFT" prefHeight="900" prefWidth="1800" visible="false">
          <children>
-             <Label fx:id="infoTime" alignment="CENTER" contentDisplay="CENTER" prefHeight="100.0" prefWidth="210.0" text="Нажмите B" textAlignment="CENTER" textFill="BLUE">
+            <VBox prefHeight="900.0" prefWidth="900.0">
+               <children>
+                  <Label fx:id="timeDisplay" alignment="CENTER" prefHeight="84.0" prefWidth="98.0" style="-fx-background-color: lightgrey; -fx-border-style: solid; -fx-border-color: blue; -fx-border-radius: 5; -fx-background-radius: 5;" text="0" textAlignment="CENTER" textFill="#1a00ff">
+                     <font>
+                        <Font name="Century Gothic Bold" size="30.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="startButton" mnemonicParsing="false" onAction="#setStartButton" prefHeight="74.0" prefWidth="98.0" style="-fx-background-color: lightgrey; -fx-border-style: solid; -fx-border-color: blue;" text="Старт" textFill="#1a00ff">
+                     <font>
+                        <Font size="23.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                  <Button fx:id="stopButton" disable="true" mnemonicParsing="false" onAction="#setStopButton" prefHeight="74.0" prefWidth="98.0" style="-fx-background-color: lightgrey; -fx-border-style: solid; -fx-border-color: blue;" text="Стоп" textFill="#1a00ff">
+                     <font>
+                        <Font size="23.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="OPEN_HAND" />
+                     </cursor>
+                  </Button>
+               </children></VBox>
+            <VBox fx:id="infoContainer" alignment="TOP_CENTER" layoutX="100.0" prefHeight="400.0" prefWidth="800.0" style="-fx-border-color: blue; -fx-border-radius: 7; -fx-background-color: lightgray;" visible="false">
+               <children>
+                   <Label fx:id="infoTime" alignment="CENTER" contentDisplay="CENTER" prefHeight="100.0" prefWidth="210.0" text="Нажмите B" textAlignment="CENTER" textFill="BLUE">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                   <Label fx:id="infoRecords" alignment="CENTER" contentDisplay="CENTER" prefHeight="100.0" prefWidth="210.0" text="Чтобы запустить sim" textAlignment="CENTER" textFill="BLUE">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                   <Label fx:id="infoLegalRecords" alignment="CENTER" contentDisplay="CENTER" prefHeight="100.0" prefWidth="210.0" text="Нажмите E" textAlignment="CENTER" textFill="BLUE">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                   <Label fx:id="infoIndividualRecords" alignment="CENTER" contentDisplay="CENTER" prefHeight="100.0" prefWidth="210.0" style="-fx-view-order: 0;" text="Чтобы завершить sim" textAlignment="CENTER" textFill="BLUE">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="900.0" layoutX="900.0" stroke="BLACK" strokeType="INSIDE" style="-fx-view-order: 10;" width="900.0" />
+         </children></Pane>
+      <Group fx:id="objGroup" disable="true" visible="false" />
+      <Pane fx:id="mainMenuObjects" prefHeight="900.0" prefWidth="1800.0" />
+      <Group>
+         <children>
+            <HBox prefHeight="900.0" prefWidth="1800.0">
+               <padding>
+                  <Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />
+               </padding>
+               <children>
+                  <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="850.0" />
+                   <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="850.0" />
+               </children>
+            </HBox>
+            <Label alignment="TOP_CENTER" layoutX="450.0" layoutY="50.0" prefHeight="200.0" prefWidth="1000.0" style="-fx-background-color: lightgrey; -fx-border-color: black; -fx-border-width: 15;" text="SIMULATION" textAlignment="CENTER">
                <font>
-                  <Font size="20.0" />
-               </font></Label>
-             <Label fx:id="infoRecords" alignment="CENTER" contentDisplay="CENTER" prefHeight="100.0" prefWidth="210.0" text="Чтобы запустить sim" textAlignment="CENTER" textFill="BLUE">
-               <font>
-                  <Font size="20.0" />
-               </font></Label>
-             <Label fx:id="infoLegalRecords" alignment="CENTER" contentDisplay="CENTER" prefHeight="100.0" prefWidth="210.0" text="Нажмите E" textAlignment="CENTER" textFill="BLUE">
-               <font>
-                  <Font size="20.0" />
-               </font></Label>
-             <Label fx:id="infoIndividualRecords" alignment="CENTER" contentDisplay="CENTER" prefHeight="100.0" prefWidth="210.0" text="Чтобы завершить sim" textAlignment="CENTER" textFill="BLUE">
-               <font>
-                  <Font size="20.0" />
-               </font></Label>
-         </children></VBox>
-      <Label fx:id="timeDisplay" alignment="CENTER" layoutX="1088.0" layoutY="14.0" prefHeight="84.0" prefWidth="98.0" style="-fx-background-color: lightgrey; -fx-border-style: solid; -fx-border-color: blue; -fx-border-radius: 5; -fx-background-radius: 5;" text="0" textAlignment="CENTER" textFill="#1a00ff">
-         <font>
-            <Font name="Century Gothic Bold" size="30.0" />
-         </font></Label>
+                  <Font name="Century Gothic Bold Italic" size="120.0" />
+               </font>
+               <textFill>
+                  <LinearGradient endX="0.6492890995260663" endY="0.3080568720379147" startY="0.8862559241706162">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color red="0.07212475687265396" green="0.08715074509382248" blue="0.9736841917037964" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="0.1739766150712967" green="0.19922026991844177" blue="0.5526315569877625" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </LinearGradient>
+               </textFill></Label>
+         </children>
+      </Group>
    </children>
 </AnchorPane>

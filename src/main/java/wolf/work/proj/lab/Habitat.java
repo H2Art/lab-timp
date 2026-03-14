@@ -1,11 +1,10 @@
 package wolf.work.proj.lab;
-import wolf.work.proj.front.LabController;
+import wolf.work.proj.front.SimController;
 import java.lang.Math;
-import java.util.ArrayList;
 
 public class Habitat {
-    private final LabController controller;
-    Habitat(LabController controller) {
+    private final SimController controller;
+    Habitat(SimController controller) {
         this.controller = controller;
     }
     static int currentTime = 0;
@@ -14,8 +13,8 @@ public class Habitat {
     final int N2 = 5;
     final double P1 = 0.9;
     final double P2 = 0.9;
-    public final static int WIDTH = 1200;
-    public final static int HEIGHT = 800;
+    public final static int WIDTH = 1800;
+    public final static int HEIGHT = 900;
 
 
 

@@ -4,6 +4,7 @@ module wolf.work.proj {
     requires javafx.graphics;
     requires java.desktop;
 //    requires wolf.work.proj;
+//    requires wolf.work.proj;
 
 
     opens wolf.work.proj.front to javafx.fxml;

@@ -9,7 +9,8 @@ import javafx.stage.Stage;
 import javafx.scene.image.Image;
 
 
-public class LabApplication extends Application {
+
+public class SimApplication extends Application {
 
     public static void main(String[] args) {
         launch(args);
@@ -19,11 +20,12 @@ public class LabApplication extends Application {
     public void start(Stage stage) throws Exception {
         stage.setWidth(Habitat.WIDTH);
         stage.setHeight(Habitat.HEIGHT);
-        FXMLLoader loader = new FXMLLoader(LabApplication.class.getResource("lab-view.fxml"));
+        FXMLLoader loader = new FXMLLoader(SimApplication.class.getResource("lab-view.fxml"));
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/sprites/FNS-icon.png")));
         Parent root = loader.load();
-        LabController controller = loader.getController();
+        SimController controller = loader.getController();
         Scene scene = new Scene(root);
+        controller.initializeButtons();
 
         scene.setOnKeyPressed(event -> {
             switch(event.getCode()) {

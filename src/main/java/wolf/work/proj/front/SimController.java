@@ -1,8 +1,9 @@
 package wolf.work.proj.front;
 import javafx.application.Platform;
 import javafx.scene.Group;
-import javafx.scene.image.Image;
+import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import wolf.work.proj.lab.*;
 import javafx.fxml.FXML;
@@ -10,7 +11,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import wolf.work.proj.lab.Record;
 
-public class LabController {
+public class SimController {
     public static int currentTime;
     @FXML
     public VBox infoContainer;
@@ -24,8 +25,15 @@ public class LabController {
     public Label infoIndividualRecords;
     @FXML
     public Group objGroup;
-
+    @FXML
+    public Button startButton;
+    @FXML
+    public Button stopButton;
+    @FXML
+    public Pane simObjects;
+    
     private Timer timer;
+
 
     @FXML
     public Label timeDisplay;
@@ -33,9 +41,16 @@ public class LabController {
 
     @FXML
     public void launch() {
+        objGroup.setVisible(true);
+        objGroup.setDisable(false);
+        simObjects.setVisible(true);
+        simObjects.setDisable(false);
         infoContainer.setVisible(false);
         initializeTimer();
+        startButton.setDisable(true);
+        stopButton.setDisable(false);
         System.out.println("sim launched");
+
     }
 
     @FXML
@@ -46,6 +61,8 @@ public class LabController {
         Habitat.clearObjArray();
         objGroup.getChildren().clear();
         changeCounter(0);
+        startButton.setDisable(false);
+        stopButton.setDisable(true);
         System.out.println("sim stopped");
     }
 
@@ -60,8 +77,17 @@ public class LabController {
     public void debug() {
         System.out.println("aaaaaaaaaaaa");
     }
+    public void initializeButtons() {
+        startButton.setOnAction(actionEvent -> {
+            launch();
+        });
+        stopButton.setOnAction(actionEvent -> {
+            stop();
+        });
+    }
     //создали запустили таймер
     public void initializeTimer() {
+        
         timer = new Timer(this);
         Thread timerThread = new Thread(timer);
         timerThread.setDaemon(true);
@@ -93,5 +119,16 @@ public class LabController {
         infoRecords.setText("Записей создано: " + Record.getObjCount());
         infoLegalRecords.setText("Юр. лиц создано: " + LegalRecord.getTypeCount());
         infoIndividualRecords.setText("Физ. лиц создано: " + IndividualRecord.getTypeCount());
+    }
+    public void setStartButton() {
+        startButton.setDisable(true);
+        stopButton.setDisable(false);
+        launch();
+
+    }
+    public void setStopButton() {
+        startButton.setDisable(false);
+        stopButton.setDisable(true);
+        stop();
     }
 }

@@ -1,15 +1,14 @@
 package wolf.work.proj.lab;
 
-import wolf.work.proj.front.LabController;
-import javafx.application.Platform;
+import wolf.work.proj.front.SimController;
 
 
 public class Timer implements Runnable {
     private final Habitat hb;
-    LabController controller;
+    SimController controller;
     private boolean running = true;
 
-    public Timer(LabController controller) {
+    public Timer(SimController controller) {
         this.controller = controller;
         this.hb = new Habitat(controller);
     }

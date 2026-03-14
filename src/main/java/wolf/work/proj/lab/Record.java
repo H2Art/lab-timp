@@ -37,8 +37,11 @@ public abstract class Record {
     public void setRandomCoordinates() {
         double f1 = Math.random();
         double f2 = Math.random();
-        int x = (int)(f1 * Habitat.WIDTH);
+        int x = (int)(f1 * ((Habitat.WIDTH - 200) / 2));
         int y = (int)(f2 * Habitat.HEIGHT);
+        if (y > 800) {
+            y -= 50;
+        }
         this.x = x;
         this.y = y;
     }
