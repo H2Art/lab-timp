@@ -9,10 +9,10 @@ public class Habitat {
     }
     static int currentTime = 0;
     // Константы
-    final int N1 = 3;
-    final int N2 = 5;
-    final double P1 = 0.9;
-    final double P2 = 0.9;
+    public static int LEGAL_PERIOD = 3;
+    public static int INDIVIDUAL_PERIOD = 5;
+    public static double LEGAL_SPAWN_CHANCE = 0.5;
+    public static double INDIVIDUAL_SPAWN_CHANCE = 0.5;
     public final static int WIDTH = 1800;
     public final static int HEIGHT = 900;
 
@@ -21,10 +21,10 @@ public class Habitat {
     // Метод, работающий постоянно
     void Update(int counter) {
         currentTime = counter;
-        if (counter % N1 == 0) {
+        if (counter % LEGAL_PERIOD == 0) {
             SpawnObject("Legal");
         }
-        if (counter % N2 == 0) {
+        if (counter % INDIVIDUAL_PERIOD == 0) {
             SpawnObject("Individual");
         }
         controller.changeCounter(currentTime);
@@ -38,11 +38,11 @@ public class Habitat {
     void SpawnObject(String type) {
         double rand = Math.random();
         Record record;
-        if (type.equals("Legal") && rand <= P1) {
+        if (type.equals("Legal") && rand <= LEGAL_SPAWN_CHANCE) {
             record = new LegalRecord();
             controller.instantiateObj(record);
         }
-        else if (type.equals("Individual") && rand <= P2) {
+        else if (type.equals("Individual") && rand <= INDIVIDUAL_SPAWN_CHANCE) {
             record = new IndividualRecord();
             controller.instantiateObj(record);
         } else {

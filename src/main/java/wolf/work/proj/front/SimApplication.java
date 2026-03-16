@@ -11,9 +11,16 @@ import javafx.scene.image.Image;
 
 
 public class SimApplication extends Application {
-
+    private static boolean SIMULATION_STATE = false;
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public static void setSimulationState(boolean newState) {
+        SIMULATION_STATE = newState;
+    }
+    public static boolean getSimulationState() {
+        return SIMULATION_STATE;
     }
 
     @Override
@@ -25,15 +32,21 @@ public class SimApplication extends Application {
         Parent root = loader.load();
         SimController controller = loader.getController();
         Scene scene = new Scene(root);
-        controller.initializeButtons();
+        controller.initComboBoxes();
 
         scene.setOnKeyPressed(event -> {
             switch(event.getCode()) {
                 case B:
+                    if (getSimulationState()) {
+                        break;
+                    }
                     controller.launch();
                     break;
                 case E:
-                    controller.stop();
+                    if (!getSimulationState()) {
+                        break;
+                    }
+                    controller.pause();
                     break;
                 case T:
                     controller.toggleTimeShow();
@@ -47,7 +60,6 @@ public class SimApplication extends Application {
         });
         stage.setTitle("Debtor spawner");
         stage.setScene(scene);
-
         stage.show();
     }
 }

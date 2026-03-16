@@ -7,6 +7,7 @@ public class Timer implements Runnable {
     private final Habitat hb;
     SimController controller;
     private boolean running = true;
+    private boolean paused = false;
 
     public Timer(SimController controller) {
         this.controller = controller;
@@ -21,8 +22,10 @@ public class Timer implements Runnable {
                 if (!running) {
                     break;
                 }
-                counter++;
-                hb.Update(counter);
+                if (!paused) {
+                    counter++;
+                    hb.Update(counter);
+                }
             }
             catch (InterruptedException e) {
                 running = false;
@@ -33,4 +36,5 @@ public class Timer implements Runnable {
     public void stop() {
         running = false;
     }
+    public void togglePause() { paused = !paused; }
 }
