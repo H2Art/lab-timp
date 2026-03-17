@@ -13,6 +13,39 @@
    <children>
       <Pane fx:id="simObjects" disable="true" nodeOrientation="RIGHT_TO_LEFT" prefHeight="900" prefWidth="1800" visible="false">
          <children>
+            <MenuBar layoutX="1560.0">
+              <menus>
+                <Menu mnemonicParsing="false" text="Инфо">
+                  <items>
+                        <RadioMenuItem mnemonicParsing="false" onAction="#setShowInfoState" selected="true" text="Вкл. инфо">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="tgInfo" />
+                           </toggleGroup></RadioMenuItem>
+                        <RadioMenuItem mnemonicParsing="false" onAction="#setShowInfoState" text="Выкл. инфо" toggleGroup="$tgInfo" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Программа">
+                  <items>
+                    <MenuItem fx:id="menuStartButton" mnemonicParsing="false" onAction="#setStartButton" text="Старт" />
+                        <MenuItem fx:id="menuStopButton" disable="true" mnemonicParsing="false" onAction="#setStopButton" text="Стоп" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Файл">
+                  <items>
+                    <MenuItem mnemonicParsing="false" onAction="#abort" text="Завершить" />
+                  </items>
+                </Menu>
+                  <Menu mnemonicParsing="false" text="Время">
+                     <items>
+                        <RadioMenuItem mnemonicParsing="false" onAction="#toggleTimeShow" selected="true" text="Вкл. время">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="tgTime" />
+                           </toggleGroup></RadioMenuItem>
+                        <RadioMenuItem mnemonicParsing="false" onAction="#toggleTimeShow" text="Выкл. время" toggleGroup="$tgTime" />
+                     </items>
+                  </Menu>
+              </menus>
+            </MenuBar>
             <VBox prefHeight="900.0" prefWidth="900.0">
                <children>
                   <Label fx:id="timeDisplay" alignment="CENTER" prefHeight="75.0" prefWidth="100.0" style="-fx-background-color: lightgrey; -fx-border-style: solid; -fx-border-color: blue; -fx-border-radius: 5; -fx-background-radius: 5;" text="0" textAlignment="CENTER" textFill="#1a00ff">
@@ -45,28 +78,19 @@
                         <Insets left="10.0" top="10.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="timeShowOn" disable="true" layoutX="10.0" layoutY="198.0" mnemonicParsing="false" onAction="#toggleTimeShow" prefHeight="75.0" prefWidth="100.0" style="-fx-background-color: lightgrey; -fx-border-style: solid; -fx-border-color: blue;" text="Вкл. время" textFill="#1a00ff">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                     <cursor>
-                        <Cursor fx:constant="OPEN_HAND" />
-                     </cursor>
+                  <RadioButton fx:id="timeShowOn" mnemonicParsing="false" onAction="#toggleTimeShow" selected="true" text="Вкл. время">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="tgTime2" />
+                     </toggleGroup>
                      <VBox.margin>
                         <Insets left="10.0" top="10.0" />
                      </VBox.margin>
-                  </Button>
-                  <Button fx:id="timeShowOff" layoutX="20.0" layoutY="282.0" mnemonicParsing="false" onAction="#toggleTimeShow" prefHeight="75.0" prefWidth="100.0" style="-fx-background-color: lightgrey; -fx-border-style: solid; -fx-border-color: blue;" text="Выкл. время" textFill="#1a00ff">
-                     <font>
-                        <Font size="13.0" />
-                     </font>
-                     <cursor>
-                        <Cursor fx:constant="OPEN_HAND" />
-                     </cursor>
+                  </RadioButton>
+                  <RadioButton fx:id="timeShowOff" mnemonicParsing="false" onAction="#toggleTimeShow" text="Выкл. время" toggleGroup="$tgTime2">
                      <VBox.margin>
                         <Insets left="10.0" top="10.0" />
                      </VBox.margin>
-                  </Button>
+                  </RadioButton>
                   <Label prefHeight="75.0" prefWidth="100.0" style="-fx-background-color: lightgray; -fx-border-color: blue;" text="Показывать информацию" textAlignment="CENTER" textFill="#1a00ff" wrapText="true">
                      <VBox.margin>
                         <Insets left="10.0" top="10.0" />

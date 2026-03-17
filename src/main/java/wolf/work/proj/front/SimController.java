@@ -40,12 +40,18 @@ public class SimController {
     @FXML
     public ComboBox<String> legalSpawnChanceBox;
     @FXML
-    public Button timeShowOn;
+    public RadioButton timeShowOn;
     @FXML
-    public Button timeShowOff;
+    public RadioButton timeShowOff;
+    @FXML
+    public MenuItem menuStartButton;
+    @FXML
+    public MenuItem menuStopButton;
     
     private Timer timer;
 
+    @FXML
+    public CheckBox alertCheckBox;
 
     @FXML
     public Label timeDisplay;
@@ -58,6 +64,8 @@ public class SimController {
         initializeTimer();
         startButton.setDisable(true);
         stopButton.setDisable(false);
+        menuStartButton.setDisable(true);
+        menuStopButton.setDisable(false);
         System.out.println("sim launched");
 
     }
@@ -71,6 +79,8 @@ public class SimController {
         changeCounter(0);
         startButton.setDisable(false);
         stopButton.setDisable(true);
+        menuStartButton.setDisable(false);
+        menuStopButton.setDisable(true);
         setMainMenu(true);
         System.out.println("sim stopped");
     }
@@ -89,8 +99,8 @@ public class SimController {
     public void toggleTimeShow() {
         timeDisplay.setVisible(!timeDisplayState);
         timeDisplayState = !timeDisplayState;
-        timeShowOn.setDisable(timeDisplayState);
-        timeShowOff.setDisable(!timeDisplayState);
+        timeShowOn.setSelected(timeDisplayState);
+        timeShowOff.setSelected(!timeDisplayState);
         System.out.println("Time toggled");
     }
 
@@ -163,7 +173,11 @@ public class SimController {
             return false;
         }
         try {
-            Integer.parseInt(text);
+            int n = Integer.parseInt(text);
+            if (n <= 0) {
+                showInputAlert();
+                return false;
+            }
             return true;
         }
         catch (NumberFormatException e) {
@@ -236,6 +250,10 @@ public class SimController {
     }
     public void setShowInfoState() {
         showInfoState = !showInfoState;
+        alertCheckBox.setSelected(showInfoState);
+    }
+    public void abort() {
+        Platform.exit();
     }
 
 }
