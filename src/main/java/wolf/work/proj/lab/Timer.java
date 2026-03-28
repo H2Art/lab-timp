@@ -18,12 +18,12 @@ public class Timer implements Runnable {
         int counter = 0;
         while (running) {
             try {
-                Thread.sleep(1000);
+                Thread.sleep(10);
                 if (!running) {
                     break;
                 }
                 if (!paused) {
-                    counter++;
+                    counter += 1;
                     hb.Update(counter);
                 }
             }

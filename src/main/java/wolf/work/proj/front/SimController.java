@@ -6,7 +6,6 @@ import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import wolf.work.proj.lab.*;
 import javafx.fxml.FXML;
 
@@ -16,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 public class SimController {
-    public static int currentTime;
+    public static double currentTime;
     public boolean showInfoState = true;
     @FXML
     public Group objGroup;
@@ -28,6 +27,8 @@ public class SimController {
     public Pane simObjects;
     @FXML
     public Pane mainMenuObjects;
+    @FXML
+    public Button currentObjectsButton;
 
     @FXML
     public TextField indPeriodField;
@@ -35,6 +36,14 @@ public class SimController {
     @FXML
     public TextField legalPeriodField;
     public String oldLegalPeriodValue = "3";
+
+    @FXML
+    public TextField indLifespanField;
+    public String oldIndLifespanValue = "5";
+    @FXML
+    public TextField legalLifespanField;
+    public String oldLegalLifespanValue = "5";
+
     @FXML
     public ComboBox<String> indSpawnChanceBox;
     @FXML
@@ -60,7 +69,6 @@ public class SimController {
     @FXML
     public void launch() {
         SimApplication.setSimulationState(true);
-        setMainMenu(false);
         initializeTimer();
         startButton.setDisable(true);
         stopButton.setDisable(false);
@@ -81,7 +89,6 @@ public class SimController {
         stopButton.setDisable(true);
         menuStartButton.setDisable(false);
         menuStopButton.setDisable(true);
-        setMainMenu(true);
         System.out.println("sim stopped");
     }
     @FXML
@@ -126,11 +133,11 @@ public class SimController {
         }
     }
     //Счетчик времени
-    public void changeCounter(int currTime) {
+    public void changeCounter(double currTime) {
         Platform.runLater(() -> {
             if (timeDisplay != null) {
                 currentTime = currTime;
-                timeDisplay.setText(String.valueOf(currentTime));
+                timeDisplay.setText(String.format("%.2f", currentTime));
             } else {
                 System.err.println("timeDisplay is null!");
             }
@@ -146,6 +153,8 @@ public class SimController {
         pause();
     }
 
+
+    //НАЙТИ СПОСОБ СОКРАТИТЬ!
     public void changeIndPeriod() {
         String newValue = indPeriodField.getText();
         if (validateValue(newValue)) {
@@ -168,6 +177,30 @@ public class SimController {
         oldLegalPeriodValue = legalPeriodField.getText();
         System.out.println("leg" + Habitat.LEGAL_PERIOD);
     }
+    public void changeIndLifespan() {
+        String newValue = indLifespanField.getText();
+        if (validateValue(newValue)) {
+            Habitat.INDIVIDUAL_LIFESPAN = Integer.parseInt(newValue);
+        }
+        else {
+            indLifespanField.setText(oldIndLifespanValue);
+        }
+        oldIndLifespanValue = indLifespanField.getText();
+        System.out.println("ind_lifespan" + Habitat.INDIVIDUAL_LIFESPAN);
+    }
+    public void changeLegalLifespan() {
+        String newValue = legalLifespanField.getText();
+        if (validateValue(newValue)) {
+            Habitat.LEGAL_LIFESPAN = Integer.parseInt(newValue);
+        }
+        else {
+            legalLifespanField.setText(oldLegalLifespanValue);
+        }
+        oldLegalLifespanValue = legalLifespanField.getText();
+        System.out.println("leg_lifespan" + Habitat.LEGAL_LIFESPAN);
+    }
+    // !
+
     public boolean validateValue(String text) {
         if (text == null || text.isEmpty()) {
             return false;
@@ -239,15 +272,6 @@ public class SimController {
             timer.togglePause();
         }
     }
-
-    public void setMainMenu(boolean flag) {
-        mainMenuObjects.setVisible(flag);
-        mainMenuObjects.setDisable(!flag);
-        simObjects.setVisible(!flag);
-        simObjects.setDisable(flag);
-        objGroup.setVisible(!flag);
-        objGroup.setDisable(flag);
-    }
     public void setShowInfoState() {
         showInfoState = !showInfoState;
         alertCheckBox.setSelected(showInfoState);
@@ -256,4 +280,22 @@ public class SimController {
         Platform.exit();
     }
 
+    public void removeObjectFromView(Record obj) {
+        Platform.runLater(() -> {
+            ImageView view = obj.getSpriteView();
+            if (view != null && objGroup.getChildren().contains(view)) {
+                objGroup.getChildren().remove(view);
+            }
+        });
+    }
+    public void clearAllObjectsFromView() {
+        Platform.runLater(() -> {
+            objGroup.getChildren().clear();
+        });
+    }
+    public void showCurrentObjects() {
+        DialogAliveObjects dialog = new DialogAliveObjects(ObjectsArraySingleton.getInstance().getObjectsByBirthTime());
+        dialog.initOwner(objGroup.getScene().getWindow());
+        dialog.showAndWait();
+    }
 }

@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 
+import java.util.Objects;
 
 
 public class SimApplication extends Application {
@@ -25,14 +26,18 @@ public class SimApplication extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        ObjectsArraySingleton.getInstance(); // инициализация синглтона
+
         stage.setWidth(Habitat.WIDTH);
         stage.setHeight(Habitat.HEIGHT);
         FXMLLoader loader = new FXMLLoader(SimApplication.class.getResource("lab-view.fxml"));
-        stage.getIcons().add(new Image(getClass().getResourceAsStream("/sprites/FNS-icon.png")));
+        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sprites/FNS-icon.png"))));
         Parent root = loader.load();
         SimController controller = loader.getController();
         Scene scene = new Scene(root);
         controller.initComboBoxes();
+
+        ObjectsArraySingleton.getInstance().setController(controller);
 
         scene.setOnKeyPressed(event -> {
             switch(event.getCode()) {

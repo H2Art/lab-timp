@@ -11,7 +11,7 @@
 
 <AnchorPane prefHeight="900.0" prefWidth="1800.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="wolf.work.proj.front.SimController">
    <children>
-      <Pane fx:id="simObjects" disable="true" nodeOrientation="RIGHT_TO_LEFT" prefHeight="900" prefWidth="1800" visible="false">
+      <Pane fx:id="simObjects" nodeOrientation="RIGHT_TO_LEFT" prefHeight="900" prefWidth="1800">
          <children>
             <MenuBar layoutX="1560.0">
               <menus>
@@ -50,7 +50,7 @@
                <children>
                   <Label fx:id="timeDisplay" alignment="CENTER" prefHeight="75.0" prefWidth="100.0" style="-fx-background-color: lightgrey; -fx-border-style: solid; -fx-border-color: blue; -fx-border-radius: 5; -fx-background-radius: 5;" text="0" textAlignment="CENTER" textFill="#1a00ff">
                      <font>
-                        <Font name="Century Gothic Bold" size="30.0" />
+                        <Font size="25.0" />
                      </font>
                      <VBox.margin>
                         <Insets left="10.0" top="10.0" />
@@ -107,6 +107,17 @@
                         <Insets left="45.0" top="10.0" />
                      </VBox.margin>
                   </CheckBox>
+                  <Button fx:id="currentObjectsButton" layoutX="20.0" layoutY="190.0" mnemonicParsing="false" onAction="#showCurrentObjects" prefHeight="75.0" prefWidth="100.0" style="-fx-background-color: lightgrey; -fx-border-style: solid; -fx-border-color: blue;" text="Текущие объекты" textAlignment="CENTER" textFill="#1a00ff" wrapText="true">
+                     <cursor>
+                        <Cursor fx:constant="OPEN_HAND" />
+                     </cursor>
+                     <VBox.margin>
+                        <Insets left="10.0" top="10.0" />
+                     </VBox.margin>
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Button>
                </children>
                <opaqueInsets>
                   <Insets />
@@ -115,9 +126,149 @@
                   <Insets right="10.0" />
                </padding></VBox>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="900.0" layoutX="900.0" stroke="BLACK" strokeType="INSIDE" style="-fx-view-order: 10;" width="900.0" />
+             <VBox alignment="TOP_CENTER" layoutX="150.0" layoutY="50.0" prefHeight="200.0" prefWidth="700.0">
+               <children>
+                  <Label text="Введите периоды рождения объектов (целые числа)" textFill="#2970c3">
+                     <font>
+                        <Font size="25.0" />
+                     </font>
+                  </Label>
+                  <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <VBox alignment="TOP_CENTER">
+                           <children>
+                              <TextField fx:id="indPeriodField" alignment="TOP_CENTER" onAction="#changeIndPeriod" onInputMethodTextChanged="#changeIndPeriod" text="5">
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                        </TextField>
+                              <Label text="Физ. лицо" textFill="#2970c3">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <HBox.margin>
+                              <Insets right="50.0" />
+                           </HBox.margin>
+                        </VBox>
+                        <VBox alignment="TOP_CENTER">
+                           <children>
+                              <TextField fx:id="legalPeriodField" alignment="TOP_CENTER" onAction="#changeLegalPeriod" onInputMethodTextChanged="#changeLegalPeriod" text="3">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </TextField>
+                              <Label text="Юр. лицо" textFill="#2970c3">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <HBox.margin>
+                              <Insets left="50.0" />
+                           </HBox.margin>
+                        </VBox>
+                     </children>
+                     <VBox.margin>
+                        <Insets top="30.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <Label layoutX="103.0" layoutY="134.0" text="Введите время жизни объектов (целые числа)" textFill="#2970c3">
+                     <font>
+                        <Font size="25.0" />
+                     </font>
+                  </Label>
+                  <HBox alignment="TOP_CENTER" layoutX="10.0" layoutY="76.0" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <VBox alignment="TOP_CENTER">
+                           <children>
+                              <TextField fx:id="indLifespanField" alignment="TOP_CENTER" onAction="#changeIndLifespan" onInputMethodTextChanged="#changeIndPeriod" text="5">
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </TextField>
+                              <Label text="Физ. лицо" textFill="#2970c3">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <HBox.margin>
+                              <Insets right="50.0" />
+                           </HBox.margin>
+                        </VBox>
+                        <VBox alignment="TOP_CENTER">
+                           <children>
+                              <TextField fx:id="legalLifespanField" alignment="TOP_CENTER" onAction="#changeLegalLifespan" onInputMethodTextChanged="#changeLegalPeriod" text="3">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </TextField>
+                              <Label text="Юр. лицо" textFill="#2970c3">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <HBox.margin>
+                              <Insets left="50.0" />
+                           </HBox.margin>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <Label layoutX="132.0" layoutY="10.0" text="Выберите шанс рождения объекта ([0.0; 1.0])" textFill="#2970c3">
+                     <font>
+                        <Font size="25.0" />
+                     </font>
+                  </Label>
+                  <HBox alignment="TOP_CENTER">
+                     <children>
+                        <VBox alignment="TOP_CENTER" prefWidth="187.0">
+                           <children>
+                              <ComboBox fx:id="indSpawnChanceBox" onAction="#setIndChanceSpawnBox" prefWidth="150.0" />
+                              <Label text="Физ. лицо" textFill="#2970c3">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                           <HBox.margin>
+                              <Insets right="50.0" />
+                           </HBox.margin>
+                        </VBox>
+                        <VBox alignment="TOP_CENTER" prefWidth="187.0">
+                           <children>
+                              <ComboBox fx:id="legalSpawnChanceBox" onAction="#setLegalChanceSpawnBox" prefWidth="150.0" />
+                              <Label text="Юр. лицо" textFill="#2970c3">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <HBox.margin>
+                              <Insets left="50.0" />
+                           </HBox.margin>
+                        </VBox>
+                     </children>
+                     <VBox.margin>
+                        <Insets top="30.0" />
+                     </VBox.margin>
+                  </HBox>
+               </children>
+            </VBox>
          </children></Pane>
-      <Group fx:id="objGroup" disable="true" visible="false" />
-      <Pane fx:id="mainMenuObjects" prefHeight="900.0" prefWidth="1800.0">
+      <Group fx:id="objGroup" />
+      <Pane fx:id="mainMenuObjects" disable="true" prefHeight="900.0" prefWidth="1800.0" visible="false">
          <children>
             <Group>
                <children>
@@ -187,109 +338,6 @@
                               <Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />
                            </padding>
                         </VBox>
-                         <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="850.0">
-                           <children>
-                              <Label text="Введите периоды рождения объектов (целые числа)" textFill="#2970c3">
-                                 <font>
-                                    <Font size="25.0" />
-                                 </font>
-                              </Label>
-                              <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0">
-                                 <children>
-                                    <VBox alignment="TOP_CENTER">
-                                       <children>
-                                          <TextField fx:id="indPeriodField" alignment="TOP_CENTER" onAction="#changeIndPeriod" onInputMethodTextChanged="#changeIndPeriod" text="3">
-                                             <VBox.margin>
-                                                <Insets />
-                                             </VBox.margin>
-                                             <font>
-                                                <Font size="15.0" />
-                                             </font>
-                                          </TextField>
-                                          <Label text="Физ. лицо" textFill="#2970c3">
-                                             <font>
-                                                <Font size="18.0" />
-                                             </font>
-                                          </Label>
-                                       </children>
-                                       <HBox.margin>
-                                          <Insets right="50.0" />
-                                       </HBox.margin>
-                                    </VBox>
-                                    <VBox alignment="TOP_CENTER">
-                                       <children>
-                                          <TextField fx:id="legalPeriodField" alignment="TOP_CENTER" onAction="#changeLegalPeriod" onInputMethodTextChanged="#changeLegalPeriod" text="5">
-                                             <font>
-                                                <Font size="15.0" />
-                                             </font></TextField>
-                                          <Label text="Юр. лицо" textFill="#2970c3">
-                                             <font>
-                                                <Font size="18.0" />
-                                             </font>
-                                          </Label>
-                                       </children>
-                                       <HBox.margin>
-                                          <Insets left="50.0" />
-                                       </HBox.margin>
-                                    </VBox>
-                                 </children>
-                                 <VBox.margin>
-                                    <Insets top="30.0" />
-                                 </VBox.margin>
-                              </HBox>
-                              <Label layoutX="132.0" layoutY="10.0" text="Выберите шанс рождения объекта ([0.0; 1.0])" textFill="#2970c3">
-                                 <font>
-                                    <Font size="25.0" />
-                                 </font>
-                              </Label>
-                              <HBox alignment="TOP_CENTER">
-                                 <children>
-                                    <VBox alignment="TOP_CENTER" prefWidth="187.0">
-                                       <children>
-                                          <ComboBox fx:id="indSpawnChanceBox" onAction="#setIndChanceSpawnBox" prefWidth="150.0" />
-                                          <Label text="Физ. лицо" textFill="#2970c3">
-                                             <font>
-                                                <Font size="18.0" />
-                                             </font>
-                                          </Label>
-                                       </children>
-                                       <opaqueInsets>
-                                          <Insets />
-                                       </opaqueInsets>
-                                       <HBox.margin>
-                                          <Insets right="50.0" />
-                                       </HBox.margin>
-                                    </VBox>
-                                    <VBox alignment="TOP_CENTER" prefWidth="187.0">
-                                       <children>
-                                          <ComboBox fx:id="legalSpawnChanceBox" onAction="#setLegalChanceSpawnBox" prefWidth="150.0" />
-                                          <Label text="Юр. лицо" textFill="#2970c3">
-                                             <font>
-                                                <Font size="18.0" />
-                                             </font>
-                                          </Label>
-                                       </children>
-                                       <HBox.margin>
-                                          <Insets left="50.0" />
-                                       </HBox.margin>
-                                    </VBox>
-                                 </children>
-                                 <VBox.margin>
-                                    <Insets top="30.0" />
-                                 </VBox.margin>
-                              </HBox>
-                              <Button mnemonicParsing="false" onAction="#setStartButton" prefHeight="125.0" prefWidth="125.0" style="-fx-border-radius: 100; -fx-background-radius: 100; -fx-background-color: RED; -fx-border-color: BLACK;" text="START" textFill="WHITE">
-                                 <VBox.margin>
-                                    <Insets top="40.0" />
-                                 </VBox.margin>
-                                 <font>
-                                    <Font name="System Bold" size="25.0" />
-                                 </font>
-                                 <cursor>
-                                    <Cursor fx:constant="OPEN_HAND" />
-                                 </cursor>
-                              </Button>
-                           </children></VBox>
                      </children>
                   </HBox>
                   <Label alignment="TOP_CENTER" layoutX="450.0" layoutY="50.0" prefHeight="200.0" prefWidth="1000.0" style="-fx-background-color: lightgrey; -fx-border-color: black; -fx-border-width: 15;" text="SIMULATION" textAlignment="CENTER">

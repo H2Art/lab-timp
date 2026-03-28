@@ -8,17 +8,40 @@ import javax.imageio.stream.ImageInputStream;
 public abstract class Record {
     protected double x;
     protected double y;
+    protected double spawnTime;
+    protected int lifespan;
+
+    protected ImageView spriteView;
+
     static int objCount;
     static int indCount;
     static int legCount;
-    String type;
 
-    Record() {
+    private int ID;
+
+    Record(double time, int lifespanTime) {
+        spawnTime = time;
+        lifespan = lifespanTime;
+        setID();
         setRandomCoordinates();
         objCount++;
+        createSpriteView();
     }
 
-    public abstract ImageView getSpriteView();
+    protected abstract Image getSprite();
+
+    public ImageView getSpriteView() {
+        return spriteView;
+    }
+    protected void createSpriteView() {
+        ImageView view = new ImageView(getSprite());
+        view.setFitWidth(100);  // или используй свою константу
+        view.setPreserveRatio(true);
+        view.setSmooth(false);
+        view.setX(this.x);
+        view.setY(this.y);
+        this.spriteView = view;
+    }
 
     public double getX() {
         return this.x;
@@ -44,5 +67,22 @@ public abstract class Record {
         }
         this.x = x;
         this.y = y;
+    }
+    public int getID() {
+        return this.ID;
+    }
+    public void setID() {
+        java.util.Random rand = new java.util.Random();
+        int newId;
+        do {
+            newId = rand.nextInt(Integer.MAX_VALUE);
+        } while (ObjectsArraySingleton.getInstance().containsId(newId));
+        this.ID = newId;
+    }
+    public int getLifespan() {
+        return this.lifespan;
+    }
+    public double getSpawnTime() {
+        return this.spawnTime;
     }
 }
