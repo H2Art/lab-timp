@@ -81,9 +81,6 @@ public class ObjectsArraySingleton {
             removeByID(id);
         }
     }
-    public synchronized Vector<Record> getAllObjects() {
-        return new Vector<>(objVector);  // возвращаем копию
-    }
     public synchronized Map<Double, Vector<Record>> getObjectsByBirthTime() {
         Map<Double, Vector<Record>> result = new HashMap<>();
         for (Record r : objVector) {

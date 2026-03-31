@@ -12,7 +12,7 @@ public class Habitat {
     public static int LEGAL_PERIOD = 3;
     public static int INDIVIDUAL_PERIOD = 5;
     public static int INDIVIDUAL_LIFESPAN = 5;
-    public static int LEGAL_LIFESPAN = 5;
+    public static int LEGAL_LIFESPAN = 3;
     public static double LEGAL_SPAWN_CHANCE = 0.5;
     public static double INDIVIDUAL_SPAWN_CHANCE = 0.5;
     public final static int WIDTH = 1800;
