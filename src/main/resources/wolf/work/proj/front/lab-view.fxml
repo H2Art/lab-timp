@@ -13,39 +13,13 @@
    <children>
       <Pane fx:id="simObjects" nodeOrientation="RIGHT_TO_LEFT" prefHeight="900" prefWidth="1800">
          <children>
-            <MenuBar layoutX="1560.0">
-              <menus>
-                <Menu mnemonicParsing="false" text="Инфо">
-                  <items>
-                        <RadioMenuItem mnemonicParsing="false" onAction="#setShowInfoState" selected="true" text="Вкл. инфо">
-                           <toggleGroup>
-                              <ToggleGroup fx:id="tgInfo" />
-                           </toggleGroup></RadioMenuItem>
-                        <RadioMenuItem mnemonicParsing="false" onAction="#setShowInfoState" text="Выкл. инфо" toggleGroup="$tgInfo" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Программа">
-                  <items>
-                    <MenuItem fx:id="menuStartButton" mnemonicParsing="false" onAction="#setStartButton" text="Старт" />
-                        <MenuItem fx:id="menuStopButton" disable="true" mnemonicParsing="false" onAction="#setStopButton" text="Стоп" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Файл">
-                  <items>
-                    <MenuItem mnemonicParsing="false" onAction="#abort" text="Завершить" />
-                  </items>
-                </Menu>
-                  <Menu mnemonicParsing="false" text="Время">
-                     <items>
-                        <RadioMenuItem mnemonicParsing="false" onAction="#toggleTimeShow" selected="true" text="Вкл. время">
-                           <toggleGroup>
-                              <ToggleGroup fx:id="tgTime" />
-                           </toggleGroup></RadioMenuItem>
-                        <RadioMenuItem mnemonicParsing="false" onAction="#toggleTimeShow" text="Выкл. время" toggleGroup="$tgTime" />
-                     </items>
-                  </Menu>
-              </menus>
-            </MenuBar>
+            <Group layoutX="900.0">
+               <children>
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="900.0" stroke="BLACK" strokeType="INSIDE" style="-fx-view-order: 10;" width="900.0" />
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#61b3ff" height="450.0" layoutX="450.0" stroke="BLACK" strokeType="INSIDE" width="450.0" />
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#61b3ff" height="450.0" layoutY="450.0" stroke="BLACK" strokeType="INSIDE" width="450.0" />
+               </children>
+            </Group>
             <VBox prefHeight="900.0" prefWidth="900.0">
                <children>
                   <Label fx:id="timeDisplay" alignment="CENTER" prefHeight="75.0" prefWidth="100.0" style="-fx-background-color: lightgrey; -fx-border-style: solid; -fx-border-color: blue; -fx-border-radius: 5; -fx-background-radius: 5;" text="0" textAlignment="CENTER" textFill="#1a00ff">
@@ -118,6 +92,38 @@
                         <Font size="16.0" />
                      </font>
                   </Button>
+                  <Label layoutX="20.0" layoutY="331.0" prefHeight="75.0" prefWidth="100.0" style="-fx-background-color: lightgray; -fx-border-color: blue;" text="Включить поток ФизAI" textAlignment="CENTER" textFill="#1a00ff" wrapText="true">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="10.0" top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <CheckBox fx:id="toggleIndividualAI" alignment="TOP_RIGHT" layoutX="55.0" layoutY="416.0" mnemonicParsing="false" onAction="#setToggleIndividualAI" selected="true" textAlignment="CENTER">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="45.0" top="10.0" />
+                     </VBox.margin>
+                  </CheckBox>
+                  <Label layoutX="20.0" layoutY="540.0" prefHeight="75.0" prefWidth="100.0" style="-fx-background-color: lightgray; -fx-border-color: blue;" text="Включить поток ЮрAI" textAlignment="CENTER" textFill="#1a00ff" wrapText="true">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="10.0" top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <CheckBox fx:id="toggleLegalAI" alignment="TOP_RIGHT" layoutX="55.0" layoutY="625.0" mnemonicParsing="false" onAction="#setToggleLegalAI" selected="true" textAlignment="CENTER">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="45.0" top="10.0" />
+                     </VBox.margin>
+                  </CheckBox>
                </children>
                <opaqueInsets>
                   <Insets />
@@ -125,7 +131,6 @@
                <padding>
                   <Insets right="10.0" />
                </padding></VBox>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="900.0" layoutX="900.0" stroke="BLACK" strokeType="INSIDE" style="-fx-view-order: 10;" width="900.0" />
              <VBox alignment="TOP_CENTER" layoutX="150.0" layoutY="50.0" prefHeight="200.0" prefWidth="700.0">
                <children>
                   <Label text="Введите периоды рождения объектов (целые числа)" textFill="#2970c3">
@@ -210,6 +215,9 @@
                                  <font>
                                     <Font size="15.0" />
                                  </font>
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
                               </TextField>
                               <Label text="Юр. лицо" textFill="#2970c3">
                                  <font>
@@ -227,6 +235,9 @@
                      <font>
                         <Font size="25.0" />
                      </font>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
                   </Label>
                   <HBox alignment="TOP_CENTER">
                      <children>
@@ -264,8 +275,85 @@
                         <Insets top="30.0" />
                      </VBox.margin>
                   </HBox>
+                  <Label layoutX="84.0" layoutY="224.0" text="Выберите приоритеты AI потоков" textFill="#2970c3">
+                     <font>
+                        <Font size="25.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <HBox alignment="TOP_CENTER" layoutX="10.0" layoutY="290.0">
+                     <children>
+                        <VBox alignment="TOP_CENTER" prefWidth="187.0">
+                           <children>
+                              <ComboBox fx:id="individualPriorityBox" onAction="#setIndividualPriorityBox" prefWidth="150.0" />
+                              <Label text="Физ. лицо" textFill="#2970c3">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                           <HBox.margin>
+                              <Insets right="50.0" />
+                           </HBox.margin>
+                        </VBox>
+                        <VBox alignment="TOP_CENTER" prefWidth="187.0">
+                           <children>
+                              <ComboBox fx:id="legalPriorityBox" onAction="#setLegalPriorityBox" prefWidth="150.0" />
+                              <Label text="Юр. лицо" textFill="#2970c3">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <HBox.margin>
+                              <Insets left="50.0" />
+                           </HBox.margin>
+                        </VBox>
+                     </children>
+                     <VBox.margin>
+                        <Insets top="30.0" />
+                     </VBox.margin>
+                  </HBox>
                </children>
             </VBox>
+            <MenuBar layoutX="1520.0">
+              <menus>
+                <Menu mnemonicParsing="false" text="Инфо">
+                  <items>
+                        <RadioMenuItem mnemonicParsing="false" onAction="#setShowInfoState" selected="true" text="Вкл. инфо">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="tgInfo" />
+                           </toggleGroup></RadioMenuItem>
+                        <RadioMenuItem mnemonicParsing="false" onAction="#setShowInfoState" text="Выкл. инфо" toggleGroup="$tgInfo" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Программа">
+                  <items>
+                    <MenuItem fx:id="menuStartButton" mnemonicParsing="false" onAction="#setStartButton" text="Старт" />
+                        <MenuItem fx:id="menuStopButton" disable="true" mnemonicParsing="false" onAction="#setStopButton" text="Стоп" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Файл">
+                  <items>
+                    <MenuItem mnemonicParsing="false" onAction="#abort" text="Завершить" />
+                  </items>
+                </Menu>
+                  <Menu mnemonicParsing="false" text="Время">
+                     <items>
+                        <RadioMenuItem mnemonicParsing="false" onAction="#toggleTimeShow" selected="true" text="Вкл. время">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="tgTime" />
+                           </toggleGroup></RadioMenuItem>
+                        <RadioMenuItem mnemonicParsing="false" onAction="#toggleTimeShow" text="Выкл. время" toggleGroup="$tgTime" />
+                     </items>
+                  </Menu>
+              </menus>
+            </MenuBar>
          </children></Pane>
       <Group fx:id="objGroup" />
       <Pane fx:id="mainMenuObjects" disable="true" prefHeight="900.0" prefWidth="1800.0" visible="false">

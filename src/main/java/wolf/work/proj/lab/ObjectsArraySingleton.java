@@ -1,8 +1,6 @@
 package wolf.work.proj.lab;
 
 import wolf.work.proj.front.SimController;
-
-import java.security.InvalidParameterException;
 import java.util.*;
 
 public class ObjectsArraySingleton {
@@ -88,5 +86,18 @@ public class ObjectsArraySingleton {
             result.computeIfAbsent(birthTime, k -> new Vector<>()).add(r);
         }
         return result;
+    }
+    public synchronized void updateObjectsCoordinates(String givenType) {
+        if (getInstance().objVector.isEmpty()) {
+            return;
+        }
+        for (Record r : getInstance().objVector) {
+            if (r.getType().equals(givenType)) {
+                r.makeStep();
+            }
+        }
+    }
+    public synchronized Vector<Record> getAllObjects() {
+        return new Vector<>(objVector);  // возвращаем копию
     }
 }

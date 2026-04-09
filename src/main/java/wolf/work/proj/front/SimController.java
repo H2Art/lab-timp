@@ -13,8 +13,12 @@ import wolf.work.proj.lab.Record;
 
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.Vector;
 
 public class SimController {
+    private LegalAI legalAI;
+    private IndividualAI individualAI;
+
     public static double currentTime;
     public boolean showInfoState = true;
     @FXML
@@ -29,6 +33,11 @@ public class SimController {
     public Pane mainMenuObjects;
     @FXML
     public Button currentObjectsButton;
+
+    @FXML
+    public ComboBox<String> legalPriorityBox;
+    @FXML
+    public ComboBox<String> individualPriorityBox;
 
     @FXML
     public TextField indPeriodField;
@@ -67,6 +76,12 @@ public class SimController {
     private boolean timeDisplayState = true;
 
     @FXML
+    public CheckBox toggleIndividualAI;
+
+    @FXML
+    public CheckBox toggleLegalAI;
+
+    @FXML
     public void launch() {
         SimApplication.setSimulationState(true);
         initializeTimer();
@@ -81,7 +96,10 @@ public class SimController {
     @FXML
     public void stop() {
         SimApplication.setSimulationState(false);
+        // остановка потоков
         timer.stop();
+        if (legalAI != null) legalAI.stop();
+        if (individualAI != null) individualAI.stop();
         Habitat.clearObjArray();
         objGroup.getChildren().clear();
         changeCounter(0);
@@ -117,7 +135,10 @@ public class SimController {
     }
     //создали запустили таймер
     public void initializeTimer() {
-        
+        legalAI = new LegalAI();
+        individualAI = new IndividualAI();
+        legalAI.start();
+        individualAI.start();
         timer = new Timer(this);
         Thread timerThread = new Thread(timer);
         timerThread.setDaemon(true);
@@ -224,11 +245,23 @@ public class SimController {
         legalSpawnChanceBox.setItems(initObservableList());
         indSpawnChanceBox.setValue("0.5");
         legalSpawnChanceBox.setValue("0.5");
+        legalPriorityBox.setItems(initObservablePriorityList());
+        individualPriorityBox.setItems(initObservablePriorityList());
+        legalPriorityBox.setValue("5");
+        individualPriorityBox.setValue("5");
     }
     public ObservableList<String> initObservableList() {
-        ArrayList<String> stringList = new ArrayList<String>();
+        ArrayList<String> stringList = new ArrayList<>();
         for (int i = 0; i <= 10; i++) {
             String elem = String.valueOf((double)i / 10);
+            stringList.add(elem);
+        }
+        return FXCollections.observableArrayList(stringList);
+    }
+    public ObservableList<String> initObservablePriorityList() {
+        ArrayList<String> stringList = new ArrayList<>();
+        for (int i = 1; i <= 10; i++) {
+            String elem = String.valueOf(i);
             stringList.add(elem);
         }
         return FXCollections.observableArrayList(stringList);
@@ -238,7 +271,6 @@ public class SimController {
     }
     public void setIndChanceSpawnBox() {
         Habitat.INDIVIDUAL_SPAWN_CHANCE = Double.parseDouble(indSpawnChanceBox.getValue());
-
     }
 
     public void showInputAlert() {
@@ -298,4 +330,36 @@ public class SimController {
         dialog.initOwner(objGroup.getScene().getWindow());
         dialog.showAndWait();
     }
+
+    public void redrawAllObjects() {
+        if (!Platform.isFxApplicationThread()) {
+            Platform.runLater(this::redrawAllObjects);
+            return;
+        }
+
+        Vector<Record> objects = ObjectsArraySingleton.getInstance().getAllObjects();
+        for (Record r : objects) {
+            ImageView view = r.getSpriteView();
+            if (view != null) {
+                view.setX(r.getX());
+                view.setY(r.getY());
+            }
+        }
+    }
+
+    public void setToggleIndividualAI() {
+        individualAI.togglePause();
+    }
+    public void setToggleLegalAI() {
+        legalAI.togglePause();
+    }
+
+    public void setLegalPriorityBox() {
+        legalAI.getThread().setPriority(Integer.parseInt(legalPriorityBox.getValue()));
+    }
+
+    public void setIndividualPriorityBox() {
+        individualAI.getThread().setPriority(Integer.parseInt(legalPriorityBox.getValue()));
+    }
+
 }

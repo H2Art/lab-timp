@@ -13,6 +13,8 @@ public class LegalRecord extends Record {
 
     public LegalRecord(double currentTime, int lifespanTime) {
         super(currentTime, lifespanTime);
+        type = "Legal";
+        this.setDestinationCoordinates();
         legCount++;
     }
 

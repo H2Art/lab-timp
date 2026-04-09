@@ -26,7 +26,7 @@ public class DialogAliveObjects extends Stage {
             content.append("Нет живых объектов");
         } else {
             content.append(String.format("%-15s | %-28s | %-20s%n", "Время рождения", "ID", "Тип"));
-            content.append("-".repeat(50)).append("\n");
+            content.repeat("-", 50).append("\n");
 
             // Сортируем по времени рождения
             birthTimeMap.entrySet().stream()

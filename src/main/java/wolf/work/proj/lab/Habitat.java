@@ -33,6 +33,7 @@ public class Habitat {
         if (counter % 100 == 0) {
             ObjectsArraySingleton.getInstance().deleteAllExpiredObjects(counter);
         }
+        controller.redrawAllObjects();
     }
 
     public static void clearObjArray() {

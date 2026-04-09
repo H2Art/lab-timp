@@ -13,6 +13,8 @@ public class IndividualRecord extends Record {
 
     public IndividualRecord(double currentTime, int lifespanTime) {
         super(currentTime, lifespanTime);
+        type = "Individual";
+        this.setDestinationCoordinates();
         indCount++;
     }
 

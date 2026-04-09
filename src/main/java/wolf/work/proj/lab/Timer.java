@@ -6,7 +6,7 @@ import wolf.work.proj.front.SimController;
 public class Timer implements Runnable {
     private final Habitat hb;
     SimController controller;
-    private boolean running = true;
+    private volatile boolean running = true;
     private boolean paused = false;
 
     public Timer(SimController controller) {
@@ -19,9 +19,6 @@ public class Timer implements Runnable {
         while (running) {
             try {
                 Thread.sleep(10);
-                if (!running) {
-                    break;
-                }
                 if (!paused) {
                     counter += 1;
                     hb.Update(counter);
