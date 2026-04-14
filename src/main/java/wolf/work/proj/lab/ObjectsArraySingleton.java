@@ -17,7 +17,7 @@ public class ObjectsArraySingleton {
         this.idTree = new TreeSet<Integer>();
         this.birthDict = new HashMap<Integer,Double>();
     }
-    public static ObjectsArraySingleton getInstance() {
+    public static synchronized ObjectsArraySingleton getInstance() {
         if (instance == null) {
             instance = new ObjectsArraySingleton();
         }

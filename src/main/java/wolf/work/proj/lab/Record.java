@@ -104,6 +104,8 @@ public abstract class Record {
             x += (double)Habitat.WIDTH / 4;
             y += (double)Habitat.HEIGHT / 2;
         }
+        y *= 0.95;
+        x *= 0.9;
         this.destinationX = x;
         this.destinationY = y;
         checkSpawn();
@@ -111,7 +113,7 @@ public abstract class Record {
     }
 
     // проверяем, не заспавнился ли объект сразу в нужном квадранте
-    public void checkSpawn() {
+    public void     checkSpawn() {
         if (type.equals("Legal")) {
             if (x >= 0 && x <= (double) Habitat.WIDTH / 4 && y >= 0 && y <= (double) Habitat.HEIGHT / 2) {
                 isOnDestination = true;

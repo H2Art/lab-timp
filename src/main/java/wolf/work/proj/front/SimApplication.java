@@ -65,6 +65,10 @@ public class SimApplication extends Application {
         });
         stage.setTitle("Debtor spawner");
         stage.setScene(scene);
+        stage.setOnCloseRequest(event -> {
+            controller.stop();
+        });
         stage.show();
+
     }
 }
