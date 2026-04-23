@@ -1,9 +1,6 @@
 package wolf.work.proj.lab;
 import javafx.scene.image.ImageView;
-import wolf.work.proj.lab.Habitat;
 import javafx.scene.image.Image;
-
-import javax.imageio.stream.ImageInputStream;
 
 public abstract class Record {
     //координаты в настоящий момент времени
@@ -28,9 +25,11 @@ public abstract class Record {
     protected ImageView spriteView;
 
     // подсчет объектов
-    static int objCount;
-    static int indCount;
-    static int legCount;
+    static int indCountCreated = 0;
+    static int objCountCreated = 0;
+    static int legCountCreated = 0;
+    public static int indCountAlive = 0;
+    public static int legCountAlive = 0;
 
     // уникальный идентификатор
     private int ID;
@@ -42,7 +41,7 @@ public abstract class Record {
         lifespan = lifespanTime;
         setID();
         setRandomCoordinates();
-        objCount++;
+        objCountCreated++;
         createSpriteView();
     }
 
@@ -75,11 +74,9 @@ public abstract class Record {
     }
 
     // геттеры количества объектов
-    public static int getObjCount() {
-        return objCount;
+    public static int getObjCountCreated() {
+        return objCountCreated;
     }
-
-    static public int getTypeCount() { return objCount; }
 
     // постановка рандомных координат при спавне объектов
     public void setRandomCoordinates() {
@@ -104,6 +101,8 @@ public abstract class Record {
             x += (double)Habitat.WIDTH / 4;
             y += (double)Habitat.HEIGHT / 2;
         }
+        y *= 0.95;
+        x *= 0.9;
         this.destinationX = x;
         this.destinationY = y;
         checkSpawn();
@@ -111,7 +110,7 @@ public abstract class Record {
     }
 
     // проверяем, не заспавнился ли объект сразу в нужном квадранте
-    public void checkSpawn() {
+    public void     checkSpawn() {
         if (type.equals("Legal")) {
             if (x >= 0 && x <= (double) Habitat.WIDTH / 4 && y >= 0 && y <= (double) Habitat.HEIGHT / 2) {
                 isOnDestination = true;

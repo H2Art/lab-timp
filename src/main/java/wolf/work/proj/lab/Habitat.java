@@ -7,14 +7,24 @@ public class Habitat {
     Habitat(SimController controller) {
         this.controller = controller;
     }
+
     static double currentTimeInSec = 0;
-    // Константы
+    // Конфигурационные значения
     public static int LEGAL_PERIOD = 3;
     public static int INDIVIDUAL_PERIOD = 5;
     public static int INDIVIDUAL_LIFESPAN = 5;
     public static int LEGAL_LIFESPAN = 3;
     public static double LEGAL_SPAWN_CHANCE = 0.5;
     public static double INDIVIDUAL_SPAWN_CHANCE = 0.5;
+    public static int INDIVIDUAL_AI_PRIORITY = 5;
+    public static int LEGAL_AI_PRIORITY = 5;
+
+    public static boolean SHOW_INFO_STATE = true;
+    public static boolean SHOW_TIME_STATE = true;
+    public static boolean LEGAL_AI_ON = true;
+    public static boolean INDIVIDUAL_AI_ON = true;
+
+    // Константы
     public final static int WIDTH = 1800;
     public final static int HEIGHT = 900;
 
@@ -37,9 +47,11 @@ public class Habitat {
     }
 
     public static void clearObjArray() {
-        Record.objCount = 0;
-        IndividualRecord.indCount = 0;
-        LegalRecord.legCount = 0;
+        Record.objCountCreated = 0;
+        IndividualRecord.indCountCreated = 0;
+        LegalRecord.legCountCreated = 0;
+        Record.indCountAlive = 0;
+        Record.legCountAlive = 0;
         ObjectsArraySingleton.getInstance().clear();
     }
 

@@ -13,6 +13,7 @@ import java.util.Objects;
 
 public class SimApplication extends Application {
     private static boolean SIMULATION_STATE = false;
+    private static Configuration configuration;
     public static void main(String[] args) {
         launch(args);
     }
@@ -28,6 +29,9 @@ public class SimApplication extends Application {
     public void start(Stage stage) throws Exception {
         ObjectsArraySingleton.getInstance(); // инициализация синглтона
 
+        configuration = new Configuration();
+        configuration.readConfig();
+
         stage.setWidth(Habitat.WIDTH);
         stage.setHeight(Habitat.HEIGHT);
         FXMLLoader loader = new FXMLLoader(SimApplication.class.getResource("lab-view.fxml"));
@@ -36,6 +40,8 @@ public class SimApplication extends Application {
         SimController controller = loader.getController();
         Scene scene = new Scene(root);
         controller.initComboBoxes();
+        controller.initTextFields();
+        controller.initOthers();
 
         ObjectsArraySingleton.getInstance().setController(controller);
 
@@ -65,6 +71,15 @@ public class SimApplication extends Application {
         });
         stage.setTitle("Debtor spawner");
         stage.setScene(scene);
+        stage.setOnCloseRequest(event -> onClose(controller));
         stage.show();
+
+    }
+    public static void onClose(SimController controller) {
+        controller.stop();
+        if (controller.terminal != null) {
+            controller.terminal.closeIO();
+        }
+        configuration.writeConfig();
     }
 }

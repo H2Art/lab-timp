@@ -15,7 +15,8 @@ public class LegalRecord extends Record {
         super(currentTime, lifespanTime);
         type = "Legal";
         this.setDestinationCoordinates();
-        legCount++;
+        legCountCreated++;
+        legCountAlive++;
     }
 
     @Override
@@ -32,6 +33,6 @@ public class LegalRecord extends Record {
     }
 
     static public int getTypeCount() {
-        return legCount;
+        return legCountCreated;
     }
 }

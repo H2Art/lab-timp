@@ -20,7 +20,6 @@ public class SimController {
     private IndividualAI individualAI;
 
     public static double currentTime;
-    public boolean showInfoState = true;
     @FXML
     public Group objGroup;
     @FXML
@@ -62,6 +61,10 @@ public class SimController {
     @FXML
     public RadioButton timeShowOff;
     @FXML
+    public RadioMenuItem menuShowTimeOn;
+    @FXML
+    public RadioMenuItem menuShowTimeOff;
+    @FXML
     public MenuItem menuStartButton;
     @FXML
     public MenuItem menuStopButton;
@@ -70,10 +73,15 @@ public class SimController {
 
     @FXML
     public CheckBox alertCheckBox;
+    @FXML
+    public RadioMenuItem menuShowInfoOn;
+    @FXML
+    public RadioMenuItem menuShowInfoOff;
 
     @FXML
     public Label timeDisplay;
-    private boolean timeDisplayState = true;
+    private boolean SHOW_TIME_STATE = true;
+    public boolean SHOW_INFO_STATE = true;
 
     @FXML
     public CheckBox toggleIndividualAI;
@@ -81,9 +89,13 @@ public class SimController {
     @FXML
     public CheckBox toggleLegalAI;
 
+    public Terminal terminal;
+
     @FXML
     public void launch() {
         SimApplication.setSimulationState(true);
+        legalAI = new LegalAI(Habitat.LEGAL_AI_ON);
+        individualAI = new IndividualAI(Habitat.INDIVIDUAL_AI_ON);
         initializeTimer();
         startButton.setDisable(true);
         stopButton.setDisable(false);
@@ -97,7 +109,9 @@ public class SimController {
     public void stop() {
         SimApplication.setSimulationState(false);
         // остановка потоков
-        timer.stop();
+        if (timer != null) {
+            timer.stop();
+        }
         if (legalAI != null) legalAI.stop();
         if (individualAI != null) individualAI.stop();
         Habitat.clearObjArray();
@@ -111,7 +125,7 @@ public class SimController {
     }
     @FXML
     public void pause() {
-        if (!showInfoState) {
+        if (!SHOW_INFO_STATE) {
             stop();
             return;
         }
@@ -122,27 +136,50 @@ public class SimController {
 
     @FXML
     public void toggleTimeShow() {
-        timeDisplay.setVisible(!timeDisplayState);
-        timeDisplayState = !timeDisplayState;
-        timeShowOn.setSelected(timeDisplayState);
-        timeShowOff.setSelected(!timeDisplayState);
+        timeDisplay.setVisible(!SHOW_TIME_STATE);
+        SHOW_TIME_STATE = !SHOW_TIME_STATE;
+        timeShowOn.setSelected(SHOW_TIME_STATE);
+        timeShowOff.setSelected(!SHOW_TIME_STATE);
+        menuShowTimeOn.setDisable(SHOW_TIME_STATE);
+        menuShowTimeOff.setDisable(!SHOW_TIME_STATE);
+        menuShowTimeOn.setSelected(SHOW_TIME_STATE);
+        menuShowTimeOff.setSelected(!SHOW_TIME_STATE);
+
+        Habitat.SHOW_TIME_STATE = SHOW_TIME_STATE;
         System.out.println("Time toggled");
     }
 
     @FXML
     public void debug() {
-        System.out.println(showInfoState);
+        Configuration configuration = new Configuration();
+        configuration.writeConfig();
+        System.out.println("debug");
     }
     //создали запустили таймер
     public void initializeTimer() {
-        legalAI = new LegalAI();
-        individualAI = new IndividualAI();
         legalAI.start();
         individualAI.start();
+        legalAI.setPriority(Habitat.LEGAL_AI_PRIORITY);
+        individualAI.setPriority(Habitat.INDIVIDUAL_AI_PRIORITY);
         timer = new Timer(this);
         Thread timerThread = new Thread(timer);
         timerThread.setDaemon(true);
         timerThread.start();
+    }
+    public void initTextFields() {
+        indPeriodField.setText(String.valueOf(Habitat.INDIVIDUAL_PERIOD));
+        legalPeriodField.setText(String.valueOf(Habitat.LEGAL_PERIOD));
+        indLifespanField.setText(String.valueOf(Habitat.INDIVIDUAL_LIFESPAN));
+        legalLifespanField.setText(String.valueOf(Habitat.LEGAL_LIFESPAN));
+    }
+    public void initOthers() {
+        SHOW_INFO_STATE = Habitat.SHOW_INFO_STATE;
+        if (!Habitat.SHOW_TIME_STATE) {
+            toggleTimeShow();
+        }
+        toggleLegalAI.setSelected(Habitat.LEGAL_AI_ON);
+        toggleIndividualAI.setSelected(Habitat.INDIVIDUAL_AI_ON);
+        alertCheckBox.setSelected(SHOW_INFO_STATE);
     }
     //рисуем объект
     public void instantiateObj(Record obj) {
@@ -170,7 +207,6 @@ public class SimController {
         launch();
     }
     public void setStopButton() {
-        System.out.println("paused2");
         pause();
     }
 
@@ -243,12 +279,12 @@ public class SimController {
     public void initComboBoxes() {
         indSpawnChanceBox.setItems(initObservableList());
         legalSpawnChanceBox.setItems(initObservableList());
-        indSpawnChanceBox.setValue("0.5");
-        legalSpawnChanceBox.setValue("0.5");
+        indSpawnChanceBox.setValue(String.valueOf(Habitat.INDIVIDUAL_SPAWN_CHANCE));
+        legalSpawnChanceBox.setValue(String.valueOf(Habitat.LEGAL_SPAWN_CHANCE));
         legalPriorityBox.setItems(initObservablePriorityList());
         individualPriorityBox.setItems(initObservablePriorityList());
-        legalPriorityBox.setValue("5");
-        individualPriorityBox.setValue("5");
+        legalPriorityBox.setValue(String.valueOf(Habitat.LEGAL_AI_PRIORITY));
+        individualPriorityBox.setValue(String.valueOf(Habitat.INDIVIDUAL_AI_PRIORITY));
     }
     public ObservableList<String> initObservableList() {
         ArrayList<String> stringList = new ArrayList<>();
@@ -290,7 +326,7 @@ public class SimController {
         textArea.setPrefColumnCount(30);
         textArea.setText("Симуляция остановлена\n" +
                 "Время: " + currentTime + "\n" +
-                "Создано объектов: " + Record.getObjCount() + "\n" +
+                "Создано объектов: " + Record.getObjCountCreated() + "\n" +
                 "Создано физ. лиц: " + IndividualRecord.getTypeCount() + "\n" +
                 "Создано юр. лиц: " + LegalRecord.getTypeCount());
         alert.getDialogPane().setContent(textArea);
@@ -305,10 +341,16 @@ public class SimController {
         }
     }
     public void setShowInfoState() {
-        showInfoState = !showInfoState;
-        alertCheckBox.setSelected(showInfoState);
+        SHOW_INFO_STATE = !SHOW_INFO_STATE;
+        alertCheckBox.setSelected(SHOW_INFO_STATE);
+        menuShowInfoOn.setSelected(SHOW_INFO_STATE);
+        menuShowInfoOff.setSelected(!SHOW_INFO_STATE);
+        menuShowInfoOn.setDisable(SHOW_INFO_STATE);
+        menuShowInfoOff.setDisable(!SHOW_INFO_STATE);
+        Habitat.SHOW_INFO_STATE = SHOW_INFO_STATE;
     }
     public void abort() {
+        SimApplication.onClose(this);
         Platform.exit();
     }
 
@@ -348,18 +390,33 @@ public class SimController {
     }
 
     public void setToggleIndividualAI() {
-        individualAI.togglePause();
+        Habitat.INDIVIDUAL_AI_ON = !Habitat.INDIVIDUAL_AI_ON;
+        if (SimApplication.getSimulationState()) {
+            individualAI.togglePause();
+        }
     }
     public void setToggleLegalAI() {
-        legalAI.togglePause();
+        Habitat.LEGAL_AI_ON = !Habitat.LEGAL_AI_ON;
+        if (SimApplication.getSimulationState()) {
+            legalAI.togglePause();
+        }
     }
 
     public void setLegalPriorityBox() {
         legalAI.getThread().setPriority(Integer.parseInt(legalPriorityBox.getValue()));
+        Habitat.LEGAL_AI_PRIORITY = Integer.parseInt(legalPriorityBox.getValue());
     }
 
     public void setIndividualPriorityBox() {
-        individualAI.getThread().setPriority(Integer.parseInt(legalPriorityBox.getValue()));
+        individualAI.getThread().setPriority(Integer.parseInt(individualPriorityBox.getValue()));
+        Habitat.INDIVIDUAL_AI_PRIORITY = Integer.parseInt(individualPriorityBox.getValue());
+    }
+
+    public void openTerminal() {
+        terminal = new Terminal();
+        terminal.initOwner(objGroup.getScene().getWindow());
+        terminal.show();
+        System.out.println("Terminal created");
     }
 
 }

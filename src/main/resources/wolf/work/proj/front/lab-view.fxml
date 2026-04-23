@@ -53,12 +53,12 @@
                      </VBox.margin>
                   </Button>
                   <RadioButton fx:id="timeShowOn" mnemonicParsing="false" onAction="#toggleTimeShow" selected="true" text="Вкл. время">
-                     <toggleGroup>
-                        <ToggleGroup fx:id="tgTime2" />
-                     </toggleGroup>
                      <VBox.margin>
                         <Insets left="10.0" top="10.0" />
                      </VBox.margin>
+                     <toggleGroup>
+                        <ToggleGroup fx:id="tgTime2" />
+                     </toggleGroup>
                   </RadioButton>
                   <RadioButton fx:id="timeShowOff" mnemonicParsing="false" onAction="#toggleTimeShow" text="Выкл. время" toggleGroup="$tgTime2">
                      <VBox.margin>
@@ -325,17 +325,18 @@
               <menus>
                 <Menu mnemonicParsing="false" text="Инфо">
                   <items>
-                        <RadioMenuItem mnemonicParsing="false" onAction="#setShowInfoState" selected="true" text="Вкл. инфо">
+                        <RadioMenuItem fx:id="menuShowInfoOn" mnemonicParsing="false" onAction="#setShowInfoState" selected="true" text="Вкл. инфо">
                            <toggleGroup>
                               <ToggleGroup fx:id="tgInfo" />
                            </toggleGroup></RadioMenuItem>
-                        <RadioMenuItem mnemonicParsing="false" onAction="#setShowInfoState" text="Выкл. инфо" toggleGroup="$tgInfo" />
+                        <RadioMenuItem fx:id="menuShowInfoOff" mnemonicParsing="false" onAction="#setShowInfoState" text="Выкл. инфо" toggleGroup="$tgInfo" />
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Программа">
                   <items>
                     <MenuItem fx:id="menuStartButton" mnemonicParsing="false" onAction="#setStartButton" text="Старт" />
                         <MenuItem fx:id="menuStopButton" disable="true" mnemonicParsing="false" onAction="#setStopButton" text="Стоп" />
+                        <MenuItem fx:id="terminalButton" mnemonicParsing="false" onAction="#openTerminal" text="Консоль" />
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Файл">
@@ -345,11 +346,11 @@
                 </Menu>
                   <Menu mnemonicParsing="false" text="Время">
                      <items>
-                        <RadioMenuItem mnemonicParsing="false" onAction="#toggleTimeShow" selected="true" text="Вкл. время">
+                        <RadioMenuItem fx:id="menuShowTimeOn" disable="true" mnemonicParsing="false" onAction="#toggleTimeShow" selected="true" text="Вкл. время">
                            <toggleGroup>
                               <ToggleGroup fx:id="tgTime" />
                            </toggleGroup></RadioMenuItem>
-                        <RadioMenuItem mnemonicParsing="false" onAction="#toggleTimeShow" text="Выкл. время" toggleGroup="$tgTime" />
+                        <RadioMenuItem fx:id="menuShowTimeOff" mnemonicParsing="false" onAction="#toggleTimeShow" text="Выкл. время" toggleGroup="$tgTime" />
                      </items>
                   </Menu>
               </menus>

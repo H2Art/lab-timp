@@ -2,12 +2,13 @@ package wolf.work.proj.lab;
 
 
 abstract public class BaseAI implements Runnable {
-    BaseAI() {}
+    BaseAI(boolean is_paused) {
+        paused = !is_paused;
+    }
     private volatile boolean running = true;
-    private volatile boolean paused = false;
-    private Thread thread;
+    private volatile boolean paused;
+    private Thread thread = new Thread(this);
     public void start() {
-        thread = new Thread(this);
         thread.start();
     }
     @Override
@@ -36,9 +37,7 @@ abstract public class BaseAI implements Runnable {
     public void stop() {
         running = false;
         synchronized (this) {
-            if (!paused) {
-                notify();
-            }
+            notify();
         }
     }
     public void togglePause() {

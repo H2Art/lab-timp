@@ -15,7 +15,8 @@ public class IndividualRecord extends Record {
         super(currentTime, lifespanTime);
         type = "Individual";
         this.setDestinationCoordinates();
-        indCount++;
+        indCountCreated++;
+        indCountAlive++;
     }
 
     @Override
@@ -33,6 +34,6 @@ public class IndividualRecord extends Record {
     }
 
     static public int getTypeCount() {
-        return indCount;
+        return indCountCreated;
     }
 }
