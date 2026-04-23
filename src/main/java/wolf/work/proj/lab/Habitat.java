@@ -8,7 +8,7 @@ public class Habitat {
         this.controller = controller;
     }
 
-    static double currentTimeInSec = 0;
+    public static double currentTimeInSec = 0;
     // Конфигурационные значения
     public static int LEGAL_PERIOD = 3;
     public static int INDIVIDUAL_PERIOD = 5;

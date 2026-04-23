@@ -3,6 +3,7 @@ module wolf.work.proj {
     requires javafx.fxml;
     requires javafx.graphics;
     requires java.desktop;
+    requires com.fasterxml.jackson.databind;
 //    requires wolf.work.proj;
 //    requires wolf.work.proj;
 

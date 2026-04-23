@@ -1,4 +1,5 @@
 package wolf.work.proj.lab;
+
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
 
@@ -22,14 +23,14 @@ public abstract class Record {
     protected int lifespan;
 
     // картинка со всеми параметрами
-    protected ImageView spriteView;
+    protected transient ImageView spriteView; // transient - не сериализуем
 
     // подсчет объектов
-    static int indCountCreated = 0;
-    static int objCountCreated = 0;
-    static int legCountCreated = 0;
-    public static int indCountAlive = 0;
-    public static int legCountAlive = 0;
+    public static transient int indCountCreated = 0;      // static не сериализуются
+    public static transient int objCountCreated = 0;
+    public static transient int legCountCreated = 0;
+    public static transient int indCountAlive = 0;
+    public static transient int legCountAlive = 0;
 
     // уникальный идентификатор
     private int ID;
@@ -44,6 +45,9 @@ public abstract class Record {
         objCountCreated++;
         createSpriteView();
     }
+
+    // Пустой конструктор для сериализации
+    public Record() {}
 
     // геттер спрайта
     protected abstract Image getSprite();
@@ -71,6 +75,21 @@ public abstract class Record {
 
     public double getY() {
         return this.y;
+    }
+
+    // сеттеры x y
+    public void setX(double x) {
+        this.x = x;
+        if (spriteView != null) {
+            spriteView.setX(x);
+        }
+    }
+
+    public void setY(double y) {
+        this.y = y;
+        if (spriteView != null) {
+            spriteView.setY(y);
+        }
     }
 
     // геттеры количества объектов
@@ -110,7 +129,7 @@ public abstract class Record {
     }
 
     // проверяем, не заспавнился ли объект сразу в нужном квадранте
-    public void     checkSpawn() {
+    public void checkSpawn() {
         if (type.equals("Legal")) {
             if (x >= 0 && x <= (double) Habitat.WIDTH / 4 && y >= 0 && y <= (double) Habitat.HEIGHT / 2) {
                 isOnDestination = true;
@@ -135,9 +154,15 @@ public abstract class Record {
         double xLen = destinationX - x;
         double yLen = destinationY - y;
         double hypo = Math.sqrt(xLen * xLen + yLen * yLen);
-        normalX = xLen / hypo;
-        normalY = yLen / hypo;
+        if (hypo != 0) {
+            normalX = xLen / hypo;
+            normalY = yLen / hypo;
+        } else {
+            normalX = 0;
+            normalY = 0;
+        }
     }
+
     public void makeStep() {
         checkDestination();
         if (isOnDestination) {
@@ -161,15 +186,88 @@ public abstract class Record {
         this.ID = newId;
     }
 
+    // сеттер ID для восстановления
+    public void setID(int id) {
+        this.ID = id;
+    }
+
     // геттеры длины жизни и времени рождения
     public int getLifespan() {
         return lifespan;
+    }
+
+    public void setLifespan(int lifespan) {
+        this.lifespan = lifespan;
     }
 
     public double getSpawnTime() {
         return spawnTime;
     }
 
+    public void setSpawnTime(double time) {
+        this.spawnTime = time;
+    }
+
     // геттер типа
-    public String getType() { return type; }
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    // Геттеры и сеттеры для destination и движения
+    public double getDestinationX() {
+        return destinationX;
+    }
+
+    public void setDestinationX(double x) {
+        this.destinationX = x;
+    }
+
+    public double getDestinationY() {
+        return destinationY;
+    }
+
+    public void setDestinationY(double y) {
+        this.destinationY = y;
+    }
+
+    public boolean isOnDestination() {
+        return isOnDestination;
+    }
+
+    public void setOnDestination(boolean on) {
+        isOnDestination = on;
+    }
+
+    public double getNormalX() {
+        return normalX;
+    }
+
+    public void setNormalX(double x) {
+        this.normalX = x;
+    }
+
+    public double getNormalY() {
+        return normalY;
+    }
+
+    public void setNormalY(double y) {
+        this.normalY = y;
+    }
+
+    public double getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(double speed) {
+        this.speed = speed;
+    }
+
+    // Метод для восстановления spriteView после загрузки
+    public void recreateSpriteView() {
+        createSpriteView();
+    }
 }

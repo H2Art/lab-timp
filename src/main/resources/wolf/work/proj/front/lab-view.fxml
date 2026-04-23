@@ -339,11 +339,12 @@
                         <MenuItem fx:id="terminalButton" mnemonicParsing="false" onAction="#openTerminal" text="Консоль" />
                   </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Файл">
-                  <items>
-                    <MenuItem mnemonicParsing="false" onAction="#abort" text="Завершить" />
-                  </items>
-                </Menu>
+                 <Menu mnemonicParsing="false" text="Файл">
+                    <MenuItem text="Сохранить" onAction="#saveSimulation"/>
+                    <MenuItem text="Загрузить" onAction="#loadSimulation"/>
+                    <SeparatorMenuItem/>
+                    <MenuItem mnemonicParsing="false" onAction="#abort" text="Завершить"/>
+                 </Menu>
                   <Menu mnemonicParsing="false" text="Время">
                      <items>
                         <RadioMenuItem fx:id="menuShowTimeOn" disable="true" mnemonicParsing="false" onAction="#toggleTimeShow" selected="true" text="Вкл. время">

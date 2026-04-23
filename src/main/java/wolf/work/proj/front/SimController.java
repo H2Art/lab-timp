@@ -6,6 +6,7 @@ import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import wolf.work.proj.lab.*;
 import javafx.fxml.FXML;
 
@@ -16,6 +17,8 @@ import java.util.Optional;
 import java.util.Vector;
 
 public class SimController {
+    private int currentCounter = 0;
+    private boolean isLoadingSimulation = false;
     private LegalAI legalAI;
     private IndividualAI individualAI;
 
@@ -108,15 +111,23 @@ public class SimController {
     @FXML
     public void stop() {
         SimApplication.setSimulationState(false);
+
         // остановка потоков
         if (timer != null) {
             timer.stop();
         }
         if (legalAI != null) legalAI.stop();
         if (individualAI != null) individualAI.stop();
+
         Habitat.clearObjArray();
         objGroup.getChildren().clear();
-        changeCounter(0);
+
+        // Сбрасываем счётчик ТОЛЬКО если это НЕ загрузка симуляции
+        if (!isLoadingSimulation) {
+            currentCounter = 0;
+            changeCounter(0);
+        }
+
         startButton.setDisable(false);
         stopButton.setDisable(true);
         menuStartButton.setDisable(false);
@@ -131,7 +142,9 @@ public class SimController {
         }
         System.out.println("paused");
         timer.togglePause();
+        pauseAI();
         showPauseAlert();
+        pauseAI();
     }
 
     @FXML
@@ -161,7 +174,9 @@ public class SimController {
         individualAI.start();
         legalAI.setPriority(Habitat.LEGAL_AI_PRIORITY);
         individualAI.setPriority(Habitat.INDIVIDUAL_AI_PRIORITY);
-        timer = new Timer(this);
+
+        // Используем конструктор с начальным счётчиком
+        timer = new Timer(this, currentCounter);
         Thread timerThread = new Thread(timer);
         timerThread.setDaemon(true);
         timerThread.start();
@@ -417,6 +432,117 @@ public class SimController {
         terminal.initOwner(objGroup.getScene().getWindow());
         terminal.show();
         System.out.println("Terminal created");
+    }
+    public void pauseAI() {
+        individualAI.togglePause();
+        legalAI.togglePause();
+    }
+
+
+
+
+    @FXML
+    public void saveSimulation() {
+        boolean wasRunning = SimApplication.getSimulationState();
+
+        if (wasRunning && timer != null) {
+            timer.togglePause();
+        }
+        pauseAI();
+        SimulationSerializer.save(
+                (Stage) objGroup.getScene().getWindow(),
+                ObjectsArraySingleton.getInstance(),
+                Habitat.currentTimeInSec
+        );
+
+        if (wasRunning && timer != null) {
+            timer.togglePause();
+        }
+        pauseAI();
+    }
+
+    @FXML
+    public void loadSimulation() {
+        isLoadingSimulation = true;
+
+        if (SimApplication.getSimulationState()) {
+            stop();
+        }
+
+        SimulationSnapshot snapshot = SimulationSerializer.load((Stage) objGroup.getScene().getWindow());
+        if (snapshot == null) {
+            isLoadingSimulation = false;
+            return;
+        }
+
+        ObjectsArraySingleton.getInstance().clear();
+        Habitat.clearObjArray();
+        clearAllObjectsFromView();
+
+        Record.objCountCreated = 0;
+        Record.indCountAlive = 0;
+        Record.legCountAlive = 0;
+        IndividualRecord.indCountCreated = 0;
+        LegalRecord.legCountCreated = 0;
+
+        Habitat.currentTimeInSec = snapshot.getCurrentTime();
+        currentCounter = (int)(Habitat.currentTimeInSec * 100);
+        changeCounter(Habitat.currentTimeInSec);
+
+        long saveTime = snapshot.getSaveTime();
+        long currentTime = System.currentTimeMillis();
+        double elapsedSeconds = (currentTime - saveTime) / 1000.0;
+        System.out.println("Прошло с момента сохранения: " + elapsedSeconds + " сек");
+
+        for (RecordDTO dto : snapshot.getIndividualRecords()) {
+            IndividualRecord record = new IndividualRecord(
+                    dto.getSpawnTime() + elapsedSeconds,
+                    dto.getLifespan()
+            );
+            restoreRecordFromDTO(record, dto);
+            ObjectsArraySingleton.getInstance().addRecord(record);
+            Record.objCountCreated++;
+            Record.indCountAlive++;
+            IndividualRecord.indCountCreated++;
+        }
+
+        for (RecordDTO dto : snapshot.getLegalRecords()) {
+            LegalRecord record = new LegalRecord(
+                    dto.getSpawnTime() + elapsedSeconds,
+                    dto.getLifespan()
+            );
+            restoreRecordFromDTO(record, dto);
+            ObjectsArraySingleton.getInstance().addRecord(record);
+            Record.objCountCreated++;
+            Record.legCountAlive++;
+            LegalRecord.legCountCreated++;
+        }
+
+        Platform.runLater(() -> {
+            for (Record r : ObjectsArraySingleton.getInstance().getAllObjects()) {
+                ImageView view = r.getSpriteView();
+                if (view != null && !objGroup.getChildren().contains(view)) {
+                    objGroup.getChildren().add(view);
+                }
+            }
+            redrawAllObjects();
+        });
+
+        isLoadingSimulation = false;
+
+        System.out.println("Симуляция загружена. Всего объектов: " +
+                (snapshot.getIndividualRecords().size() + snapshot.getLegalRecords().size()));
+    }
+
+    private void restoreRecordFromDTO(Record record, RecordDTO dto) {
+        record.setID(dto.getId());
+        record.setX(dto.getX());
+        record.setY(dto.getY());
+        record.setDestinationX(dto.getDestinationX());
+        record.setDestinationY(dto.getDestinationY());
+        record.setOnDestination(dto.isOnDestination());
+        record.setNormalXY();
+        record.recreateSpriteView();
     }
 
 }
