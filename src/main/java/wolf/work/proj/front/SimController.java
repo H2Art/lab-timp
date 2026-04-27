@@ -2,6 +2,7 @@ package wolf.work.proj.front;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
@@ -11,12 +12,26 @@ import wolf.work.proj.lab.*;
 import javafx.fxml.FXML;
 
 import wolf.work.proj.lab.Record;
+import wolf.work.proj.network.NetworkMessage;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Vector;
 
 public class SimController {
+    @FXML
+    public ListView<String> clientListView;
+    @FXML
+    public Button syncProbButton;
+    // Сеть
+    private ObjectOutputStream networkOut;
+    private String myClientId;
+    private ObservableList<String> connectedClients = FXCollections.observableArrayList();
+
     private int currentCounter = 0;
     private boolean isLoadingSimulation = false;
     private LegalAI legalAI;
@@ -195,6 +210,9 @@ public class SimController {
         toggleLegalAI.setSelected(Habitat.LEGAL_AI_ON);
         toggleIndividualAI.setSelected(Habitat.INDIVIDUAL_AI_ON);
         alertCheckBox.setSelected(SHOW_INFO_STATE);
+
+        clientListView.setItems(connectedClients);
+        connectToServer();
     }
     //рисуем объект
     public void instantiateObj(Record obj) {
@@ -540,4 +558,65 @@ public class SimController {
         record.recreateSpriteView();
     }
 
+    private void connectToServer() {
+        new Thread(() -> {
+            try {
+                Socket socket = new Socket(Configuration.SERVER_HOST, Configuration.SERVER_PORT);
+                networkOut = new ObjectOutputStream(socket.getOutputStream());
+                ObjectInputStream networkIn = new ObjectInputStream(socket.getInputStream());
+                myClientId = socket.getLocalSocketAddress().toString();
+                System.out.println("Подключено к серверу, ID: " + myClientId);
+
+                while (true) {
+                    NetworkMessage msg = (NetworkMessage) networkIn.readObject();
+                    Platform.runLater(() -> handleNetworkMessage(msg));
+                }
+            } catch (Exception e) {
+                System.err.println("Ошибка сети: " + e.getMessage());
+            }
+        }).start();
+    }
+
+    private void handleNetworkMessage(NetworkMessage msg) {
+        switch (msg.type) {
+            case CLIENT_LIST:
+                connectedClients.setAll(msg.clientList);
+                connectedClients.remove(myClientId);
+                break;
+            case SYNC_PROB:
+                // Обновляем вероятности в симуляции
+                Habitat.INDIVIDUAL_SPAWN_CHANCE = msg.individualSpawnChance;
+                Habitat.LEGAL_SPAWN_CHANCE = msg.legalSpawnChance;
+                // Обновляем UI (комбобоксы)
+                indSpawnChanceBox.setValue(String.valueOf(Habitat.INDIVIDUAL_SPAWN_CHANCE));
+                legalSpawnChanceBox.setValue(String.valueOf(Habitat.LEGAL_SPAWN_CHANCE));
+                System.out.println("Получены вероятности: Ind=" + Habitat.INDIVIDUAL_SPAWN_CHANCE + ", Legal=" + Habitat.LEGAL_SPAWN_CHANCE);
+                break;
+        }
+    }
+
+    @FXML
+    public void syncProbabilities() {
+        String selected = clientListView.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Синхронизация");
+            alert.setHeaderText(null);
+            alert.setContentText("Выберите клиента из списка");
+            alert.showAndWait();
+            return;
+        }
+        try {
+            NetworkMessage msg = new NetworkMessage();
+            msg.type = NetworkMessage.Type.SYNC_PROB;
+            msg.targetId = selected;
+            msg.individualSpawnChance = Habitat.INDIVIDUAL_SPAWN_CHANCE;
+            msg.legalSpawnChance = Habitat.LEGAL_SPAWN_CHANCE;
+            networkOut.writeObject(msg);
+            networkOut.flush();
+            System.out.println("Отправлены вероятности клиенту " + selected);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

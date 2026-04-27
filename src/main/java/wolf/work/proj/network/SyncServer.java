@@ -1,33 +1,36 @@
 package wolf.work.proj.network;
 
 import wolf.work.proj.lab.Configuration;
+
 import java.io.*;
 import java.net.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SyncServer {
-    private static ConcurrentHashMap<String, ObjectOutputStream> clients = new ConcurrentHashMap<>();
+
+    private static final ConcurrentHashMap<String, ObjectOutputStream> clients = new ConcurrentHashMap<>();
 
     public static void main(String[] args) {
-        // Загружаем конфигурацию (чтобы взять порт)
+        // Подгружаем конфигурацию, чтобы получить порт
         Configuration config = new Configuration();
-        config.readConfig();
+        config.readConfig();  // загрузит / создаст config.properties с серверными настройками
         int port = Configuration.SERVER_PORT;
         System.out.println("Сервер синхронизации запущен на порту " + port);
 
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             while (true) {
-                Socket socket = serverSocket.accept();
-                new Thread(() -> handleClient(socket)).start();
+                Socket clientSocket = serverSocket.accept();
+                new Thread(() -> handleClient(clientSocket)).start();
             }
         } catch (IOException e) {
+            System.err.println("Ошибка сервера: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
     private static void handleClient(Socket socket) {
         String clientId = socket.getRemoteSocketAddress().toString();
-        System.out.println("Новый клиент: " + clientId);
+        System.out.println("Подключился клиент: " + clientId);
         try (ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
              ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
 
@@ -42,7 +45,7 @@ public class SyncServer {
                     if (targetOut != null) {
                         targetOut.writeObject(msg);
                         targetOut.flush();
-                        System.out.println("Пересылка вероятностей от " + clientId + " к " + msg.targetId);
+                        System.out.println("Пересланы вероятности от " + clientId + " к " + msg.targetId);
                     }
                 }
             }

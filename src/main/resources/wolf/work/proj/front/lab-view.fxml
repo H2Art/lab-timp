@@ -131,7 +131,7 @@
                <padding>
                   <Insets right="10.0" />
                </padding></VBox>
-             <VBox alignment="TOP_CENTER" layoutX="150.0" layoutY="50.0" prefHeight="200.0" prefWidth="700.0">
+             <VBox alignment="TOP_CENTER" layoutX="150.0" layoutY="50.0" prefHeight="600.0" prefWidth="700.0">
                <children>
                   <Label text="Введите периоды рождения объектов (целые числа)" textFill="#2970c3">
                      <font>
@@ -178,6 +178,7 @@
                            </HBox.margin>
                         </VBox>
                      </children>
+
                      <VBox.margin>
                         <Insets top="30.0" />
                      </VBox.margin>
@@ -319,6 +320,17 @@
                         <Insets top="30.0" />
                      </VBox.margin>
                   </HBox>
+                  <Label text="Синхронизация" textFill="#2970c3">
+                     <font><Font size="18" /></font>
+                  </Label>
+                  <ListView fx:id="clientListView" prefHeight="100.0" prefWidth="200.0">
+                     <VBox.margin>
+                        <Insets left="20.0" right="20.0" top="10.0" />
+                     </VBox.margin></ListView>
+                  <Button fx:id="syncProbButton" onAction="#syncProbabilities" text="Отправить вероятности">
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin></Button>
                </children>
             </VBox>
             <MenuBar layoutX="1520.0">
@@ -340,10 +352,10 @@
                   </items>
                 </Menu>
                  <Menu mnemonicParsing="false" text="Файл">
-                    <MenuItem text="Сохранить" onAction="#saveSimulation"/>
-                    <MenuItem text="Загрузить" onAction="#loadSimulation"/>
-                    <SeparatorMenuItem/>
-                    <MenuItem mnemonicParsing="false" onAction="#abort" text="Завершить"/>
+                    <MenuItem onAction="#saveSimulation" text="Сохранить" />
+                    <MenuItem onAction="#loadSimulation" text="Загрузить" />
+                    <SeparatorMenuItem />
+                    <MenuItem mnemonicParsing="false" onAction="#abort" text="Завершить" />
                  </Menu>
                   <Menu mnemonicParsing="false" text="Время">
                      <items>
