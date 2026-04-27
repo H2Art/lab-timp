@@ -84,6 +84,7 @@ public class ObjectsArraySingleton {
         for (int id : expiredIds) {
             removeByID(id);
         }
+
     }
     public synchronized Map<Double, Vector<Record>> getObjectsByBirthTime() {
         Map<Double, Vector<Record>> result = new HashMap<>();

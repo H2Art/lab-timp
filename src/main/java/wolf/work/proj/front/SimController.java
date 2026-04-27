@@ -463,54 +463,45 @@ public class SimController {
 
     @FXML
     public void loadSimulation() {
-        isLoadingSimulation = true;
+        // Загружаем снапшот
+        SimulationSnapshot snapshot = SimulationSerializer.load((Stage) objGroup.getScene().getWindow());
+        if (snapshot == null) return;
 
         if (SimApplication.getSimulationState()) {
-            stop();
+            if (timer != null) timer.stop();
+            if (legalAI != null) legalAI.stop();
+            if (individualAI != null) individualAI.stop();
+            SimApplication.setSimulationState(false);
         }
 
-        SimulationSnapshot snapshot = SimulationSerializer.load((Stage) objGroup.getScene().getWindow());
-        if (snapshot == null) {
-            isLoadingSimulation = false;
-            return;
-        }
-
+        // Очищаем симуляцию и счётчики
         ObjectsArraySingleton.getInstance().clear();
         Habitat.clearObjArray();
         clearAllObjectsFromView();
-
         Record.objCountCreated = 0;
         Record.indCountAlive = 0;
         Record.legCountAlive = 0;
         IndividualRecord.indCountCreated = 0;
         LegalRecord.legCountCreated = 0;
 
+        // Восстанавливаем время симуляции
         Habitat.currentTimeInSec = snapshot.getCurrentTime();
         currentCounter = (int)(Habitat.currentTimeInSec * 100);
         changeCounter(Habitat.currentTimeInSec);
+        System.out.println("Время симуляции восстановлено: " + Habitat.currentTimeInSec + " сек");
 
-        long saveTime = snapshot.getSaveTime();
-        long currentTime = System.currentTimeMillis();
-        double elapsedSeconds = (currentTime - saveTime) / 1000.0;
-        System.out.println("Прошло с момента сохранения: " + elapsedSeconds + " сек");
-
+        // Восстанавливаем Individual Records
         for (RecordDTO dto : snapshot.getIndividualRecords()) {
-            IndividualRecord record = new IndividualRecord(
-                    dto.getSpawnTime() + elapsedSeconds,
-                    dto.getLifespan()
-            );
+            IndividualRecord record = new IndividualRecord(dto.getSpawnTime(), dto.getLifespan());
             restoreRecordFromDTO(record, dto);
             ObjectsArraySingleton.getInstance().addRecord(record);
             Record.objCountCreated++;
             Record.indCountAlive++;
             IndividualRecord.indCountCreated++;
         }
-
+        // Восстанавливаем Legal Records
         for (RecordDTO dto : snapshot.getLegalRecords()) {
-            LegalRecord record = new LegalRecord(
-                    dto.getSpawnTime() + elapsedSeconds,
-                    dto.getLifespan()
-            );
+            LegalRecord record = new LegalRecord(dto.getSpawnTime(), dto.getLifespan());
             restoreRecordFromDTO(record, dto);
             ObjectsArraySingleton.getInstance().addRecord(record);
             Record.objCountCreated++;
@@ -518,19 +509,23 @@ public class SimController {
             LegalRecord.legCountCreated++;
         }
 
+        // Перерисовываем объекты
         Platform.runLater(() -> {
+            objGroup.getChildren().clear();
             for (Record r : ObjectsArraySingleton.getInstance().getAllObjects()) {
                 ImageView view = r.getSpriteView();
-                if (view != null && !objGroup.getChildren().contains(view)) {
-                    objGroup.getChildren().add(view);
-                }
+                if (view != null) objGroup.getChildren().add(view);
             }
             redrawAllObjects();
         });
 
-        isLoadingSimulation = false;
+        // Обновляем состояние кнопок
+        startButton.setDisable(false);
+        stopButton.setDisable(true);
+        menuStartButton.setDisable(false);
+        menuStopButton.setDisable(true);
 
-        System.out.println("Симуляция загружена. Всего объектов: " +
+        System.out.println("Загружено объектов: " +
                 (snapshot.getIndividualRecords().size() + snapshot.getLegalRecords().size()));
     }
 
