@@ -6,6 +6,8 @@ import java.io.*;
 import java.util.Properties;
 
 public class Configuration {
+    public static String SERVER_HOST = "localhost";
+    public static int SERVER_PORT = 12345;
     private static final String CONFIG_FILE = "config.properties";
     private Properties properties = new Properties();
     public void writeConfig() {
@@ -23,6 +25,8 @@ public class Configuration {
         properties.setProperty("legal.ai.on", String.valueOf(Habitat.LEGAL_AI_ON));
         properties.setProperty("individual.ai.on", String.valueOf(Habitat.INDIVIDUAL_AI_ON));
 
+        properties.setProperty("server.host", SERVER_HOST);
+        properties.setProperty("server.port", String.valueOf(SERVER_PORT));
         try (FileWriter writer = new FileWriter(CONFIG_FILE)) {
             properties.store(writer, "Simulation Configuration");
             System.out.println("Config written");
@@ -52,6 +56,14 @@ public class Configuration {
             Habitat.SHOW_TIME_STATE = Boolean.parseBoolean(properties.getProperty("show.time.state"));
             Habitat.LEGAL_AI_ON = Boolean.parseBoolean(properties.getProperty("legal.ai.on"));
             Habitat.INDIVIDUAL_AI_ON = Boolean.parseBoolean(properties.getProperty("individual.ai.on"));
+
+            SERVER_HOST = properties.getProperty("server.host", "localhost");
+            String portStr = properties.getProperty("server.port", "12345");
+            try {
+                SERVER_PORT = Integer.parseInt(portStr);
+            } catch (NumberFormatException e) {
+                SERVER_PORT = 12345;
+            }
 
             System.out.println("Config read successfully");
 
