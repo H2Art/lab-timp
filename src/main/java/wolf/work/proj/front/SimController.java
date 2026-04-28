@@ -513,18 +513,12 @@ public class SimController {
             IndividualRecord record = new IndividualRecord(dto.getSpawnTime(), dto.getLifespan());
             restoreRecordFromDTO(record, dto);
             ObjectsArraySingleton.getInstance().addRecord(record);
-            Record.objCountCreated++;
-            Record.indCountAlive++;
-            IndividualRecord.indCountCreated++;
         }
         // Восстанавливаем Legal Records
         for (RecordDTO dto : snapshot.getLegalRecords()) {
             LegalRecord record = new LegalRecord(dto.getSpawnTime(), dto.getLifespan());
             restoreRecordFromDTO(record, dto);
             ObjectsArraySingleton.getInstance().addRecord(record);
-            Record.objCountCreated++;
-            Record.legCountAlive++;
-            LegalRecord.legCountCreated++;
         }
 
         // Перерисовываем объекты

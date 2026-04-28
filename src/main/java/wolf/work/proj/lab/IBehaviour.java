@@ -9,4 +9,9 @@ public interface IBehaviour {
 конфиг порта
 рассчет на разные айпи-порты
 tcp/udp соединение
+
+бдшки
+sqlite
+HSQLDB (h2)
+не хардкодить подключение
 */
