@@ -39,6 +39,8 @@ public class SimController {
     private LegalAI legalAI;
     private IndividualAI individualAI;
 
+    public Socket socket;
+
     public static double currentTime;
     @FXML
     public Group objGroup;
@@ -390,7 +392,7 @@ public class SimController {
         Habitat.SHOW_INFO_STATE = SHOW_INFO_STATE;
     }
 
-    public void abort() {
+    public void abort() throws IOException {
         SimApplication.onClose(this);
         Platform.exit();
     }
@@ -553,7 +555,7 @@ public class SimController {
     private void connectToServer(String host, int port) {
         new Thread(() -> {
             try {
-                Socket socket = new Socket(host, port);
+                socket = new Socket(host, port);
                 networkOut = new ObjectOutputStream(socket.getOutputStream());
                 ObjectInputStream networkIn = new ObjectInputStream(socket.getInputStream());
                 myClientId = socket.getLocalSocketAddress().toString();
@@ -652,6 +654,11 @@ public class SimController {
             connectToServer(host, port);
         } else {
             System.out.println("Подключение отменено пользователем");
+        }
+    }
+    public void closeSocket() throws IOException {
+        if (socket != null) {
+            socket.close();
         }
     }
 }

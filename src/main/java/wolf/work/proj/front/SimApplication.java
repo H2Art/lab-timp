@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 
+import java.io.IOException;
 import java.util.Objects;
 
 
@@ -70,15 +71,22 @@ public class SimApplication extends Application {
         });
         stage.setTitle("Debtor spawner");
         stage.setScene(scene);
-        stage.setOnCloseRequest(event -> onClose(controller));
+        stage.setOnCloseRequest(event -> {
+            try {
+                onClose(controller);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
         stage.show();
 
     }
-    public static void onClose(SimController controller) {
+    public static void onClose(SimController controller) throws IOException {
         controller.stop();
         if (controller.terminal != null) {
             controller.terminal.closeIO();
         }
         configuration.writeConfig();
+        controller.closeSocket();
     }
 }
