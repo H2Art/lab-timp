@@ -1,55 +1,44 @@
 package wolf.work.proj.lab;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class SimulationSerializer {
-    private static final ObjectMapper mapper = new ObjectMapper();
 
-    static {
-        mapper.enable(SerializationFeature.INDENT_OUTPUT);
-    }
     public static void save(Stage owner, ObjectsArraySingleton world, double currentTime) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Сохранить симуляцию");
         fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("JSON files", "*.json")
-        );
-        fileChooser.setInitialFileName("simulation.json");
+                new FileChooser.ExtensionFilter("Serialized simulation", "*.ser"));
+        fileChooser.setInitialFileName("simulation.ser");
 
         File file = fileChooser.showSaveDialog(owner);
         if (file == null) return;
 
-        try {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
             SimulationSnapshot snapshot = new SimulationSnapshot();
-            snapshot.setSaveTime(System.currentTimeMillis());
             snapshot.setCurrentTime(currentTime);
+            snapshot.setSaveTime(System.currentTimeMillis());
 
-            ArrayList<RecordDTO> individualRecords = new ArrayList<>();
-            ArrayList<RecordDTO> legalRecords = new ArrayList<>();
-
-            // Проходим по всем живым объектам
+            List<Record> inds = new ArrayList<>();
+            List<Record> legs = new ArrayList<>();
             for (Record r : world.getAllObjects()) {
-                if (r.getType().equals("Individual")) {
-                    individualRecords.add(new RecordDTO(r));
-                } else if (r.getType().equals("Legal")) {
-                    legalRecords.add(new RecordDTO(r));
+                if ("Individual".equals(r.getType())) {
+                    inds.add(r);
+                } else if ("Legal".equals(r.getType())) {
+                    legs.add(r);
                 }
             }
+            snapshot.setIndividualRecords(inds);
+            snapshot.setLegalRecords(legs);
 
-            snapshot.setIndividualRecords(individualRecords);
-            snapshot.setLegalRecords(legalRecords);
-
-            mapper.writeValue(file, snapshot);
+            oos.writeObject(snapshot);
             System.out.println("Симуляция сохранена: " + file.getAbsolutePath());
-            System.out.println("Объектов сохранено: " + (individualRecords.size() + legalRecords.size()));
-
+            System.out.println("Объектов сохранено: " + (inds.size() + legs.size()));
         } catch (IOException e) {
             System.err.println("Ошибка сохранения: " + e.getMessage());
             e.printStackTrace();
@@ -60,19 +49,16 @@ public class SimulationSerializer {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Загрузить симуляцию");
         fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("JSON files", "*.json")
-        );
+                new FileChooser.ExtensionFilter("Serialized simulation", "*.ser"));
 
         File file = fileChooser.showOpenDialog(owner);
         if (file == null) return null;
 
-        try {
-            SimulationSnapshot snapshot = mapper.readValue(file, SimulationSnapshot.class);
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+            SimulationSnapshot snapshot = (SimulationSnapshot) ois.readObject();
             System.out.println("Симуляция загружена: " + file.getAbsolutePath());
-            System.out.println("Физических объектов: " + snapshot.getIndividualRecords().size());
-            System.out.println("Юридических объектов: " + snapshot.getLegalRecords().size());
             return snapshot;
-        } catch (IOException e) {
+        } catch (IOException | ClassNotFoundException e) {
             System.err.println("Ошибка загрузки: " + e.getMessage());
             e.printStackTrace();
             return null;

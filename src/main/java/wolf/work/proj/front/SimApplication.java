@@ -31,7 +31,6 @@ public class SimApplication extends Application {
 
         configuration = new Configuration();
         configuration.readConfig();
-
         stage.setWidth(Habitat.WIDTH);
         stage.setHeight(Habitat.HEIGHT);
         FXMLLoader loader = new FXMLLoader(SimApplication.class.getResource("lab-view.fxml"));

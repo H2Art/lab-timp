@@ -1,4 +1,5 @@
 package wolf.work.proj.front;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -86,7 +87,7 @@ public class SimController {
     public MenuItem menuStartButton;
     @FXML
     public MenuItem menuStopButton;
-    
+
     private Timer timer;
 
     @FXML
@@ -120,7 +121,6 @@ public class SimController {
         menuStartButton.setDisable(true);
         menuStopButton.setDisable(false);
         System.out.println("sim launched");
-
     }
 
     @FXML
@@ -149,6 +149,7 @@ public class SimController {
         menuStopButton.setDisable(true);
         System.out.println("sim stopped");
     }
+
     @FXML
     public void pause() {
         if (!SHOW_INFO_STATE) {
@@ -183,7 +184,7 @@ public class SimController {
         configuration.writeConfig();
         System.out.println("debug");
     }
-    //создали запустили таймер
+
     public void initializeTimer() {
         legalAI.start();
         individualAI.start();
@@ -196,12 +197,14 @@ public class SimController {
         timerThread.setDaemon(true);
         timerThread.start();
     }
+
     public void initTextFields() {
         indPeriodField.setText(String.valueOf(Habitat.INDIVIDUAL_PERIOD));
         legalPeriodField.setText(String.valueOf(Habitat.LEGAL_PERIOD));
         indLifespanField.setText(String.valueOf(Habitat.INDIVIDUAL_LIFESPAN));
         legalLifespanField.setText(String.valueOf(Habitat.LEGAL_LIFESPAN));
     }
+
     public void initOthers() {
         SHOW_INFO_STATE = Habitat.SHOW_INFO_STATE;
         if (!Habitat.SHOW_TIME_STATE) {
@@ -214,7 +217,7 @@ public class SimController {
         clientListView.setItems(connectedClients);
         connectToServer();
     }
-    //рисуем объект
+
     public void instantiateObj(Record obj) {
         if (Platform.isFxApplicationThread()) {
             ImageView preview = obj.getSpriteView();
@@ -223,7 +226,7 @@ public class SimController {
             Platform.runLater(() -> instantiateObj(obj));
         }
     }
-    //Счетчик времени
+
     public void changeCounter(double currTime) {
         Platform.runLater(() -> {
             if (timeDisplay != null) {
@@ -234,62 +237,60 @@ public class SimController {
             }
         });
     }
+
     public void setStartButton() {
         startButton.setDisable(true);
         stopButton.setDisable(false);
         launch();
     }
+
     public void setStopButton() {
         pause();
     }
 
-
-    //НАЙТИ СПОСОБ СОКРАТИТЬ!
     public void changeIndPeriod() {
         String newValue = indPeriodField.getText();
         if (validateValue(newValue)) {
             Habitat.INDIVIDUAL_PERIOD = Integer.parseInt(newValue);
-        }
-        else {
+        } else {
             indPeriodField.setText(oldIndPeriodValue);
         }
         oldIndPeriodValue = indPeriodField.getText();
         System.out.println("ind" + Habitat.INDIVIDUAL_PERIOD);
     }
+
     public void changeLegalPeriod() {
         String newValue = legalPeriodField.getText();
         if (validateValue(newValue)) {
             Habitat.LEGAL_PERIOD = Integer.parseInt(newValue);
-        }
-        else {
+        } else {
             legalPeriodField.setText(oldLegalPeriodValue);
         }
         oldLegalPeriodValue = legalPeriodField.getText();
         System.out.println("leg" + Habitat.LEGAL_PERIOD);
     }
+
     public void changeIndLifespan() {
         String newValue = indLifespanField.getText();
         if (validateValue(newValue)) {
             Habitat.INDIVIDUAL_LIFESPAN = Integer.parseInt(newValue);
-        }
-        else {
+        } else {
             indLifespanField.setText(oldIndLifespanValue);
         }
         oldIndLifespanValue = indLifespanField.getText();
         System.out.println("ind_lifespan" + Habitat.INDIVIDUAL_LIFESPAN);
     }
+
     public void changeLegalLifespan() {
         String newValue = legalLifespanField.getText();
         if (validateValue(newValue)) {
             Habitat.LEGAL_LIFESPAN = Integer.parseInt(newValue);
-        }
-        else {
+        } else {
             legalLifespanField.setText(oldLegalLifespanValue);
         }
         oldLegalLifespanValue = legalLifespanField.getText();
         System.out.println("leg_lifespan" + Habitat.LEGAL_LIFESPAN);
     }
-    // !
 
     public boolean validateValue(String text) {
         if (text == null || text.isEmpty()) {
@@ -302,8 +303,7 @@ public class SimController {
                 return false;
             }
             return true;
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             showInputAlert();
             return false;
         }
@@ -319,6 +319,7 @@ public class SimController {
         legalPriorityBox.setValue(String.valueOf(Habitat.LEGAL_AI_PRIORITY));
         individualPriorityBox.setValue(String.valueOf(Habitat.INDIVIDUAL_AI_PRIORITY));
     }
+
     public ObservableList<String> initObservableList() {
         ArrayList<String> stringList = new ArrayList<>();
         for (int i = 0; i <= 10; i++) {
@@ -327,6 +328,7 @@ public class SimController {
         }
         return FXCollections.observableArrayList(stringList);
     }
+
     public ObservableList<String> initObservablePriorityList() {
         ArrayList<String> stringList = new ArrayList<>();
         for (int i = 1; i <= 10; i++) {
@@ -335,9 +337,11 @@ public class SimController {
         }
         return FXCollections.observableArrayList(stringList);
     }
+
     public void setLegalChanceSpawnBox() {
         Habitat.LEGAL_SPAWN_CHANCE = Double.parseDouble(legalSpawnChanceBox.getValue());
     }
+
     public void setIndChanceSpawnBox() {
         Habitat.INDIVIDUAL_SPAWN_CHANCE = Double.parseDouble(indSpawnChanceBox.getValue());
     }
@@ -349,6 +353,7 @@ public class SimController {
         alert.setHeaderText("Ошибка!");
         alert.showAndWait();
     }
+
     public void showPauseAlert() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Пауза");
@@ -373,6 +378,7 @@ public class SimController {
             timer.togglePause();
         }
     }
+
     public void setShowInfoState() {
         SHOW_INFO_STATE = !SHOW_INFO_STATE;
         alertCheckBox.setSelected(SHOW_INFO_STATE);
@@ -382,6 +388,7 @@ public class SimController {
         menuShowInfoOff.setDisable(!SHOW_INFO_STATE);
         Habitat.SHOW_INFO_STATE = SHOW_INFO_STATE;
     }
+
     public void abort() {
         SimApplication.onClose(this);
         Platform.exit();
@@ -395,11 +402,13 @@ public class SimController {
             }
         });
     }
+
     public void clearAllObjectsFromView() {
         Platform.runLater(() -> {
             objGroup.getChildren().clear();
         });
     }
+
     public void showCurrentObjects() {
         DialogAliveObjects dialog = new DialogAliveObjects(ObjectsArraySingleton.getInstance().getObjectsByBirthTime());
         dialog.initOwner(objGroup.getScene().getWindow());
@@ -428,6 +437,7 @@ public class SimController {
             individualAI.togglePause();
         }
     }
+
     public void setToggleLegalAI() {
         Habitat.LEGAL_AI_ON = !Habitat.LEGAL_AI_ON;
         if (SimApplication.getSimulationState()) {
@@ -451,13 +461,11 @@ public class SimController {
         terminal.show();
         System.out.println("Terminal created");
     }
+
     public void pauseAI() {
         individualAI.togglePause();
         legalAI.togglePause();
     }
-
-
-
 
     @FXML
     public void saveSimulation() {
@@ -508,18 +516,18 @@ public class SimController {
         changeCounter(Habitat.currentTimeInSec);
         System.out.println("Время симуляции восстановлено: " + Habitat.currentTimeInSec + " сек");
 
-        // Восстанавливаем Individual Records
-        for (RecordDTO dto : snapshot.getIndividualRecords()) {
-            IndividualRecord record = new IndividualRecord(dto.getSpawnTime(), dto.getLifespan());
-            restoreRecordFromDTO(record, dto);
+        // Восстанавливаем объекты
+        for (Record record : snapshot.getIndividualRecords()) {
+            record.recreateSpriteView(); // SpriteView пересоздаётся
             ObjectsArraySingleton.getInstance().addRecord(record);
         }
-        // Восстанавливаем Legal Records
-        for (RecordDTO dto : snapshot.getLegalRecords()) {
-            LegalRecord record = new LegalRecord(dto.getSpawnTime(), dto.getLifespan());
-            restoreRecordFromDTO(record, dto);
+        for (Record record : snapshot.getLegalRecords()) {
+            record.recreateSpriteView();
             ObjectsArraySingleton.getInstance().addRecord(record);
         }
+
+        Record.indCountAlive = snapshot.getIndividualRecords().size();
+        Record.legCountAlive = snapshot.getLegalRecords().size();
 
         // Перерисовываем объекты
         Platform.runLater(() -> {
@@ -539,17 +547,6 @@ public class SimController {
 
         System.out.println("Загружено объектов: " +
                 (snapshot.getIndividualRecords().size() + snapshot.getLegalRecords().size()));
-    }
-
-    private void restoreRecordFromDTO(Record record, RecordDTO dto) {
-        record.setID(dto.getId());
-        record.setX(dto.getX());
-        record.setY(dto.getY());
-        record.setDestinationX(dto.getDestinationX());
-        record.setDestinationY(dto.getDestinationY());
-        record.setOnDestination(dto.isOnDestination());
-        record.setNormalXY();
-        record.recreateSpriteView();
     }
 
     private void connectToServer() {
@@ -578,10 +575,8 @@ public class SimController {
                 connectedClients.remove(myClientId);
                 break;
             case SYNC_PROB:
-                // Обновляем вероятности в симуляции
                 Habitat.INDIVIDUAL_SPAWN_CHANCE = msg.individualSpawnChance;
                 Habitat.LEGAL_SPAWN_CHANCE = msg.legalSpawnChance;
-                // Обновляем UI (комбобоксы)
                 indSpawnChanceBox.setValue(String.valueOf(Habitat.INDIVIDUAL_SPAWN_CHANCE));
                 legalSpawnChanceBox.setValue(String.valueOf(Habitat.LEGAL_SPAWN_CHANCE));
                 System.out.println("Получены вероятности: Ind=" + Habitat.INDIVIDUAL_SPAWN_CHANCE + ", Legal=" + Habitat.LEGAL_SPAWN_CHANCE);

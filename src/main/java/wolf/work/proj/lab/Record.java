@@ -2,8 +2,11 @@ package wolf.work.proj.lab;
 
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
+import java.io.Serializable;
 
-public abstract class Record {
+public abstract class Record implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     //координаты в настоящий момент времени
     protected double x;
     protected double y;
@@ -26,7 +29,7 @@ public abstract class Record {
     protected transient ImageView spriteView; // transient - не сериализуем
 
     // подсчет объектов
-    public static transient int indCountCreated = 0;      // static не сериализуются
+    public static transient int indCountCreated = 0;
     public static transient int objCountCreated = 0;
     public static transient int legCountCreated = 0;
     public static transient int indCountAlive = 0;
