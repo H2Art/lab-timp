@@ -131,7 +131,7 @@
                <padding>
                   <Insets right="10.0" />
                </padding></VBox>
-             <VBox alignment="TOP_CENTER" layoutX="150.0" layoutY="50.0" prefHeight="600.0" prefWidth="700.0">
+             <VBox alignment="TOP_CENTER" layoutX="150.0" layoutY="50.0" prefHeight="800.0" prefWidth="700.0">
                <children>
                   <Label text="Введите периоды рождения объектов (целые числа)" textFill="#2970c3">
                      <font>
@@ -330,6 +330,10 @@
                   <Button fx:id="syncProbButton" onAction="#syncProbabilities" text="Отправить вероятности">
                      <VBox.margin>
                         <Insets top="10.0" />
+                     </VBox.margin></Button>
+                  <Button fx:id="connectionButton" layoutX="287.0" layoutY="585.0" onAction="#showConnectionDialog" text="Подключиться к серверу">
+                     <VBox.margin>
+                        <Insets top="15.0" />
                      </VBox.margin></Button>
                </children>
             </VBox>

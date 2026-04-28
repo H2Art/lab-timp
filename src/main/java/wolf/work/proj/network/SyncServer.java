@@ -4,20 +4,31 @@ import wolf.work.proj.lab.Configuration;
 
 import java.io.*;
 import java.net.*;
+import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SyncServer {
 
     private static final ConcurrentHashMap<String, ObjectOutputStream> clients = new ConcurrentHashMap<>();
+    private static int PORT;
+    private static String IP;
+    private static Scanner scanner = new Scanner(System.in);
 
-    public static void main(String[] args) {
-        // Подгружаем конфигурацию, чтобы получить порт
+    public static void main(String[] args) throws UnknownHostException {
         Configuration config = new Configuration();
-        config.readConfig();  // загрузит / создаст config.properties с серверными настройками
-        int port = Configuration.SERVER_PORT;
-        System.out.println("Сервер синхронизации запущен на порту " + port);
+        config.readConfig();
+        System.out.print("Введите IP: ");//
+        IP = scanner.nextLine();
+        System.out.print("Введите порт: ");// читаем остальные настройки, если нужно
+        PORT = scanner.nextInt();
+        InetAddress address = InetAddress.getByName(IP);
 
-        try (ServerSocket serverSocket = new ServerSocket(port)) {
+        try (ServerSocket serverSocket = new ServerSocket(PORT, 50, address)) { // порт 0 = автоназначение
+            int actualPort = PORT;
+
+            System.out.println("Сервер синхронизации запущен на порту " + actualPort);
+            System.out.println("Сообщите этот порт клиентам для подключения.");
+
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 new Thread(() -> handleClient(clientSocket)).start();
@@ -70,5 +81,8 @@ public class SyncServer {
                 e.printStackTrace();
             }
         }
+    }
+    public static int getPort() {
+        return PORT;
     }
 }

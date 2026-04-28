@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import wolf.work.proj.lab.*;
@@ -96,6 +97,8 @@ public class SimController {
     public RadioMenuItem menuShowInfoOn;
     @FXML
     public RadioMenuItem menuShowInfoOff;
+    @FXML
+    public Button connectionButton;
 
     @FXML
     public Label timeDisplay;
@@ -180,8 +183,6 @@ public class SimController {
 
     @FXML
     public void debug() {
-        Configuration configuration = new Configuration();
-        configuration.writeConfig();
         System.out.println("debug");
     }
 
@@ -215,7 +216,7 @@ public class SimController {
         alertCheckBox.setSelected(SHOW_INFO_STATE);
 
         clientListView.setItems(connectedClients);
-        connectToServer();
+//        showConnectionDialog();
     }
 
     public void instantiateObj(Record obj) {
@@ -549,10 +550,10 @@ public class SimController {
                 (snapshot.getIndividualRecords().size() + snapshot.getLegalRecords().size()));
     }
 
-    private void connectToServer() {
+    private void connectToServer(String host, int port) {
         new Thread(() -> {
             try {
-                Socket socket = new Socket(Configuration.SERVER_HOST, Configuration.SERVER_PORT);
+                Socket socket = new Socket(host, port);
                 networkOut = new ObjectOutputStream(socket.getOutputStream());
                 ObjectInputStream networkIn = new ObjectInputStream(socket.getInputStream());
                 myClientId = socket.getLocalSocketAddress().toString();
@@ -564,6 +565,13 @@ public class SimController {
                 }
             } catch (Exception e) {
                 System.err.println("Ошибка сети: " + e.getMessage());
+                Platform.runLater(() -> {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Ошибка подключения");
+                    alert.setHeaderText("Не удалось подключиться к серверу синхронизации");
+                    alert.setContentText(e.getMessage());
+                    alert.showAndWait();
+                });
             }
         }).start();
     }
@@ -606,6 +614,44 @@ public class SimController {
             System.out.println("Отправлены вероятности клиенту " + selected);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+    public void showConnectionDialog() {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Подключение к серверу синхронизации");
+        dialog.setHeaderText("Введите IP-адрес и порт сервера");
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+
+        TextField hostField = new TextField(Configuration.SERVER_HOST);
+        hostField.setPromptText("localhost");
+        TextField portField = new TextField(String.valueOf(Configuration.SERVER_PORT));
+        portField.setPromptText("порт");
+
+        grid.add(new Label("IP-адрес:"), 0, 0);
+        grid.add(hostField, 1, 0);
+        grid.add(new Label("Порт:"), 0, 1);
+        grid.add(portField, 1, 1);
+
+        dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        Optional<ButtonType> result = dialog.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            String host = hostField.getText().trim();
+            String portText = portField.getText().trim();
+            if (host.isEmpty()) host = Configuration.SERVER_HOST;
+            int port;
+            try {
+                port = Integer.parseInt(portText);
+            } catch (NumberFormatException e) {
+                port = Configuration.SERVER_PORT;
+            }
+            connectToServer(host, port);
+        } else {
+            System.out.println("Подключение отменено пользователем");
         }
     }
 }
