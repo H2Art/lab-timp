@@ -3,6 +3,7 @@ module wolf.work.proj {
     requires javafx.fxml;
     requires javafx.graphics;
     requires java.desktop;
+    requires java.sql;
 
 
     opens wolf.work.proj.front to javafx.fxml;

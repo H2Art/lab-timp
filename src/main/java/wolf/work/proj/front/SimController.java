@@ -9,18 +9,23 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import wolf.work.proj.database.DatabaseManager;
 import wolf.work.proj.lab.*;
 import javafx.fxml.FXML;
 
 import wolf.work.proj.lab.Record;
 import wolf.work.proj.network.NetworkMessage;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Vector;
 
@@ -218,7 +223,7 @@ public class SimController {
         alertCheckBox.setSelected(SHOW_INFO_STATE);
 
         clientListView.setItems(connectedClients);
-//        showConnectionDialog();
+        DatabaseManager.initTables();
     }
 
     public void instantiateObj(Record obj) {
@@ -660,5 +665,125 @@ public class SimController {
         if (socket != null) {
             socket.close();
         }
+    }
+
+
+    @FXML
+    public void saveIndividualsToDB() {
+        // Собираем всех физических лиц
+        List<Record> individuals = new ArrayList<>();
+        for (Record r : ObjectsArraySingleton.getInstance().getAllObjects()) {
+            if (r instanceof IndividualRecord) individuals.add(r);
+        }
+        DatabaseManager.saveIndividualRecords(individuals);
+        System.out.println("Количество физ. лиц: " + individuals.size());
+        showInfoAlert("Сохранение в БД", "Физические лица сохранены в базу данных.");
+    }
+
+    @FXML
+    public void saveLegalsToDB() {
+        List<Record> legals = new ArrayList<>();
+        for (Record r : ObjectsArraySingleton.getInstance().getAllObjects()) {
+            if (r instanceof LegalRecord) legals.add(r);
+        }
+        DatabaseManager.saveLegalRecords(legals);
+        showInfoAlert("Сохранение в БД", "Юридические лица сохранены в базу данных.");
+    }
+
+    // Вспомогательный метод для уведомлений
+    private void showInfoAlert(String title, String message) {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle(title);
+            alert.setHeaderText(null);
+            alert.setContentText(message);
+            alert.showAndWait();
+        });
+    }
+    @FXML
+    public void showTableContent() {
+        try (Connection conn = DriverManager.getConnection(Configuration.DB_URL)) {
+            Statement stmt = conn.createStatement();
+            // Посмотрим, сколько физических лиц в БД
+            ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM individual_records");
+            rs.next();
+            System.out.println("=== Содержимое БД ===");
+            System.out.println("Всего физических лиц: " + rs.getInt(1));
+
+            // Выведем каждого
+            rs = stmt.executeQuery("SELECT * FROM individual_records");
+            while (rs.next()) {
+                System.out.println("ID: " + rs.getInt("id") +
+                        ", x: " + rs.getDouble("x") +
+                        ", y: " + rs.getDouble("y") +
+                        ", spawn_time: " + rs.getDouble("spawn_time"));
+            }
+            rs = stmt.executeQuery("SELECT COUNT(*) FROM legal_records");
+            rs.next();
+            System.out.println("Всего Юр. лиц: " + rs.getInt(1));
+
+            // Выведем каждого
+            rs = stmt.executeQuery("SELECT * FROM legal_records");
+            while (rs.next()) {
+                System.out.println("ID: " + rs.getInt("id") +
+                        ", x: " + rs.getDouble("x") +
+                        ", y: " + rs.getDouble("y") +
+                        ", spawn_time: " + rs.getDouble("spawn_time"));
+            }
+        } catch (SQLException e) {
+            System.err.println("Ошибка: " + e.getMessage());
+        }
+    }
+    @FXML
+    public void importIndividualsFromDBFile() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Выберите файл базы данных для импорта физических лиц");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("SQLite DB", "*.db"));
+        Stage stage = (Stage) objGroup.getScene().getWindow();
+        File file = fileChooser.showOpenDialog(stage);
+
+        if (file == null) {
+            showInfoAlert("Импорт отменён", "Файл не выбран.");
+            return;
+        }
+
+        boolean success = DatabaseManager.importIndividualRecordsFromFile(file.getAbsolutePath());
+        if (success) {
+            showInfoAlert("Импорт выполнен", "Физические лица успешно импортированы из файла:\n" + file.getName());
+        } else {
+            showErrorAlert("Ошибка импорта", "Не удалось прочитать данные из файла.\nУбедитесь, что файл является корректной SQLite БД с таблицей individual_records.");
+        }
+    }
+
+    @FXML
+    public void importLegalsFromDBFile() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Выберите файл базы данных для импорта юридических лиц");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("SQLite DB", "*.db"));
+        Stage stage = (Stage) objGroup.getScene().getWindow();
+        File file = fileChooser.showOpenDialog(stage);
+
+        if (file == null) {
+            showInfoAlert("Импорт отменён", "Файл не выбран.");
+            return;
+        }
+
+        boolean success = DatabaseManager.importLegalRecordsFromFile(file.getAbsolutePath());
+        if (success) {
+            showInfoAlert("Импорт выполнен", "Юридические лица успешно импортированы из файла:\n" + file.getName());
+        } else {
+            showErrorAlert("Ошибка импорта", "Не удалось прочитать данные из файла.\nУбедитесь, что файл является корректной SQLite БД с таблицей legal_records.");
+        }
+    }
+
+    // Вспомогательный метод для ошибок
+    private void showErrorAlert(String title, String message) {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle(title);
+            alert.setHeaderText(null);
+            alert.setContentText(message);
+            alert.showAndWait();
+        });
     }
 }

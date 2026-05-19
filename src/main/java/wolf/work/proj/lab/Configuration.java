@@ -9,6 +9,7 @@ public class Configuration {
     public static String SERVER_HOST = "localhost";
     public static int SERVER_PORT = 12345;
     private static final String CONFIG_FILE = "config.properties";
+    public static String DB_URL = "jdbc:sqlite:simulation_old.db";
     private Properties properties = new Properties();
     public void writeConfig() {
         properties.setProperty("legal.period", String.valueOf(Habitat.LEGAL_PERIOD));
@@ -27,6 +28,9 @@ public class Configuration {
 
         properties.setProperty("server.host", SERVER_HOST);
         properties.setProperty("server.port", String.valueOf(SERVER_PORT));
+
+        properties.setProperty("db.url", DB_URL);
+
         try (FileWriter writer = new FileWriter(CONFIG_FILE)) {
             properties.store(writer, "Simulation Configuration");
             System.out.println("Config written");
@@ -64,6 +68,7 @@ public class Configuration {
             } catch (NumberFormatException e) {
                 SERVER_PORT = 12345;
             }
+            DB_URL = properties.getProperty("db.url", "jdbc:sqlite:simulation_old.db");
 
             System.out.println("Config read successfully");
 

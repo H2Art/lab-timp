@@ -358,6 +358,14 @@
                  <Menu mnemonicParsing="false" text="Файл">
                     <MenuItem onAction="#saveSimulation" text="Сохранить" />
                     <MenuItem onAction="#loadSimulation" text="Загрузить" />
+                    <Menu mnemonicParsing="false" text="База данных">
+                       <MenuItem onAction="#saveIndividualsToDB" text="Сохранить физ. лиц в БД" />
+                       <MenuItem onAction="#saveLegalsToDB" text="Сохранить юр. лиц в БД" />
+                       <MenuItem onAction="#showTableContent" text="Посмотреть таблицу (stdout)"/>
+                       <SeparatorMenuItem />
+                       <MenuItem onAction="#importIndividualsFromDBFile" text="Загрузить физ. лица из БД" />
+                       <MenuItem onAction="#importLegalsFromDBFile" text="Загрузить юр. лица из БД" />
+                    </Menu>
                     <SeparatorMenuItem />
                     <MenuItem mnemonicParsing="false" onAction="#abort" text="Завершить" />
                  </Menu>
